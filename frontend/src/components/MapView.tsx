@@ -37,7 +37,14 @@ export default function MapView({ districts, selected, onSelect }: Props) {
 
     ;(async () => {
       const L = (await import('leaflet')).default
-      const geo = await loadGeojson() // GeoJSON desde la API (BD), no estático
+      // GeoJSON estático PRIMERO (siempre disponible en Vercel); API solo como respaldo.
+      let geo: any
+      try {
+        geo = await fetch('/data/northcoast.geojson').then((r) => r.json())
+        if (!geo?.features?.length) throw new Error('vacío')
+      } catch {
+        geo = await loadGeojson()
+      }
       if (cancelled || !containerRef.current) return
 
       const map = L.map(containerRef.current, { attributionControl: false, zoomControl: true })
