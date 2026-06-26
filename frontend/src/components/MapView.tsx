@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import 'leaflet/dist/leaflet.css'
-import type { GeoJsonObject } from 'geojson'
 import { LEVEL_COLOR, type District } from '@/lib/vigia'
+import { loadGeojson } from '@/lib/vigia-api'
 
 interface Props {
   districts: Record<string, District>
@@ -37,7 +37,7 @@ export default function MapView({ districts, selected, onSelect }: Props) {
 
     ;(async () => {
       const L = (await import('leaflet')).default
-      const geo: GeoJsonObject = await fetch('/data/northcoast.geojson').then((r) => r.json())
+      const geo = await loadGeojson() // GeoJSON desde la API (BD), no estático
       if (cancelled || !containerRef.current) return
 
       const map = L.map(containerRef.current, { attributionControl: false, zoomControl: true })
