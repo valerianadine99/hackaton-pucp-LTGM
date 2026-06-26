@@ -3,7 +3,7 @@
     "ubigeo": "240101",
     "nombre": "Tumbes",
     "departamento": "Tumbes",
-    "conteo": 157,
+    "conteo": 159,
     "anios": [
       2003,
       2004,
@@ -16,6 +16,32 @@
       2011,
       2012,
       2013,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200201",
+    "nombre": "Ayabaca",
+    "departamento": "Piura",
+    "conteo": 102,
+    "anios": [
+      2003,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
       2015,
       2016,
       2017,
@@ -50,8 +76,10 @@
     "ubigeo": "130802",
     "nombre": "Buldibuyo",
     "departamento": "La Libertad",
-    "conteo": 74,
+    "conteo": 85,
     "anios": [
+      2003,
+      2011,
       2014,
       2020
     ],
@@ -61,7 +89,7 @@
     "ubigeo": "200301",
     "nombre": "Huancabamba",
     "departamento": "Piura",
-    "conteo": 70,
+    "conteo": 74,
     "anios": [
       2005,
       2007,
@@ -75,31 +103,6 @@
       2015,
       2016,
       2017,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200201",
-    "nombre": "Ayabaca",
-    "departamento": "Piura",
-    "conteo": 61,
-    "anios": [
-      2003,
-      2005,
-      2006,
-      2007,
-      2008,
-      2009,
-      2010,
-      2012,
-      2013,
-      2014,
-      2015,
-      2016,
-      2017,
-      2018,
       2019,
       2020
     ],
@@ -109,12 +112,13 @@
     "ubigeo": "130602",
     "nombre": "Agallpampa",
     "departamento": "La Libertad",
-    "conteo": 59,
+    "conteo": 66,
     "anios": [
       2006,
       2007,
       2010,
       2011,
+      2012,
       2013,
       2017,
       2018,
@@ -124,29 +128,10 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "131001",
-    "nombre": "Santiago De Chuco",
-    "departamento": "La Libertad",
-    "conteo": 58,
-    "anios": [
-      2005,
-      2006,
-      2009,
-      2011,
-      2013,
-      2015,
-      2016,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
     "ubigeo": "200111",
     "nombre": "Las Lomas",
     "departamento": "Piura",
-    "conteo": 58,
+    "conteo": 60,
     "anios": [
       2003,
       2004,
@@ -157,6 +142,7 @@
       2009,
       2012,
       2013,
+      2014,
       2015,
       2016,
       2017,
@@ -166,21 +152,36 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "200303",
-    "nombre": "El Carmen De La Frontera",
-    "departamento": "Piura",
-    "conteo": 54,
+    "ubigeo": "131001",
+    "nombre": "Santiago De Chuco",
+    "departamento": "La Libertad",
+    "conteo": 59,
     "anios": [
-      2003,
       2005,
       2006,
-      2007,
+      2009,
+      2011,
+      2013,
+      2015,
+      2016,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "240105",
+    "nombre": "San Jacinto",
+    "departamento": "Tumbes",
+    "conteo": 57,
+    "anios": [
+      2006,
       2008,
       2009,
       2010,
       2011,
       2012,
-      2013,
       2014,
       2015,
       2016,
@@ -192,17 +193,21 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "240105",
-    "nombre": "San Jacinto",
-    "departamento": "Tumbes",
-    "conteo": 53,
+    "ubigeo": "200303",
+    "nombre": "El Carmen De La Frontera",
+    "departamento": "Piura",
+    "conteo": 56,
     "anios": [
+      2003,
+      2005,
       2006,
+      2007,
       2008,
       2009,
       2010,
       2011,
       2012,
+      2013,
       2014,
       2015,
       2016,
@@ -234,10 +239,32 @@
     "nivel": "alto"
   },
   {
+    "ubigeo": "130901",
+    "nombre": "Huamachuco",
+    "departamento": "La Libertad",
+    "conteo": 51,
+    "anios": [
+      2003,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2011,
+      2012,
+      2014,
+      2015,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
     "ubigeo": "240104",
     "nombre": "Pampas De Hospital",
     "departamento": "Tumbes",
-    "conteo": 49,
+    "conteo": 50,
     "anios": [
       2003,
       2006,
@@ -276,6 +303,29 @@
     "nivel": "alto"
   },
   {
+    "ubigeo": "200401",
+    "nombre": "Chulucanas",
+    "departamento": "Piura",
+    "conteo": 47,
+    "anios": [
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2015,
+      2016,
+      2017,
+      2019
+    ],
+    "nivel": "alto"
+  },
+  {
     "ubigeo": "200304",
     "nombre": "Huarmaca",
     "departamento": "Piura",
@@ -297,29 +347,6 @@
       2018,
       2019,
       2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200401",
-    "nombre": "Chulucanas",
-    "departamento": "Piura",
-    "conteo": 46,
-    "anios": [
-      2004,
-      2005,
-      2006,
-      2007,
-      2008,
-      2009,
-      2010,
-      2011,
-      2012,
-      2013,
-      2015,
-      2016,
-      2017,
-      2019
     ],
     "nivel": "alto"
   },
@@ -346,31 +373,10 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "130901",
-    "nombre": "Huamachuco",
-    "departamento": "La Libertad",
-    "conteo": 45,
-    "anios": [
-      2003,
-      2005,
-      2006,
-      2007,
-      2009,
-      2011,
-      2012,
-      2014,
-      2015,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
     "ubigeo": "200308",
     "nombre": "Sondorillo",
     "departamento": "Piura",
-    "conteo": 41,
+    "conteo": 44,
     "anios": [
       2004,
       2005,
@@ -393,7 +399,7 @@
     "ubigeo": "130601",
     "nombre": "Otuzco",
     "departamento": "La Libertad",
-    "conteo": 40,
+    "conteo": 43,
     "anios": [
       2006,
       2007,
@@ -413,8 +419,9 @@
     "ubigeo": "200302",
     "nombre": "Canchaque",
     "departamento": "Piura",
-    "conteo": 37,
+    "conteo": 42,
     "anios": [
+      2003,
       2006,
       2007,
       2008,
@@ -435,7 +442,7 @@
     "ubigeo": "240103",
     "nombre": "La Cruz",
     "departamento": "Tumbes",
-    "conteo": 37,
+    "conteo": 41,
     "anios": [
       2006,
       2008,
@@ -446,7 +453,26 @@
       2016,
       2017,
       2018,
-      2019
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130801",
+    "nombre": "Tayabamba",
+    "departamento": "La Libertad",
+    "conteo": 39,
+    "anios": [
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2009,
+      2017,
+      2019,
+      2020
     ],
     "nivel": "alto"
   },
@@ -498,20 +524,21 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "130801",
-    "nombre": "Tayabamba",
-    "departamento": "La Libertad",
+    "ubigeo": "240201",
+    "nombre": "Zorritos",
+    "departamento": "Tumbes",
     "conteo": 35,
     "anios": [
-      2003,
       2004,
-      2005,
       2006,
-      2007,
       2009,
+      2010,
+      2011,
+      2012,
+      2015,
+      2016,
       2017,
-      2019,
-      2020
+      2019
     ],
     "nivel": "alto"
   },
@@ -530,6 +557,26 @@
       2016,
       2017,
       2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200202",
+    "nombre": "Frias",
+    "departamento": "Piura",
+    "conteo": 34,
+    "anios": [
+      2006,
+      2008,
+      2010,
+      2011,
+      2012,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
     ],
     "nivel": "alto"
   },
@@ -553,41 +600,19 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "200202",
-    "nombre": "Frias",
-    "departamento": "Piura",
-    "conteo": 33,
-    "anios": [
-      2006,
-      2008,
-      2010,
-      2011,
-      2012,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "240201",
-    "nombre": "Zorritos",
-    "departamento": "Tumbes",
+    "ubigeo": "130301",
+    "nombre": "Bolívar",
+    "departamento": "La Libertad",
     "conteo": 33,
     "anios": [
       2004,
+      2005,
       2006,
-      2009,
-      2010,
-      2011,
-      2012,
-      2015,
-      2016,
+      2007,
+      2013,
       2017,
-      2019
+      2018,
+      2020
     ],
     "nivel": "alto"
   },
@@ -610,10 +635,42 @@
     "nivel": "alto"
   },
   {
+    "ubigeo": "130614",
+    "nombre": "Usquil",
+    "departamento": "La Libertad",
+    "conteo": 30,
+    "anios": [
+      2006,
+      2007,
+      2008,
+      2014,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130907",
+    "nombre": "Sarín",
+    "departamento": "La Libertad",
+    "conteo": 29,
+    "anios": [
+      2005,
+      2007,
+      2011,
+      2012,
+      2014,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
     "ubigeo": "130908",
     "nombre": "Sartimbamba",
     "departamento": "La Libertad",
-    "conteo": 28,
+    "conteo": 29,
     "anios": [
       2003,
       2010,
@@ -624,30 +681,103 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "130301",
-    "nombre": "Bolívar",
-    "departamento": "La Libertad",
-    "conteo": 27,
+    "ubigeo": "200206",
+    "nombre": "Pacaipampa",
+    "departamento": "Piura",
+    "conteo": 29,
     "anios": [
-      2004,
-      2005,
-      2006,
       2007,
+      2008,
+      2009,
+      2012,
       2013,
+      2016,
       2017,
       2018,
+      2019,
       2020
     ],
     "nivel": "alto"
   },
   {
-    "ubigeo": "130907",
-    "nombre": "Sarín",
+    "ubigeo": "131104",
+    "nombre": "Sayapullo",
+    "departamento": "La Libertad",
+    "conteo": 28,
+    "anios": [
+      2005,
+      2006,
+      2007,
+      2010,
+      2012,
+      2017,
+      2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200408",
+    "nombre": "Santa Catalina De Mossa",
+    "departamento": "Piura",
+    "conteo": 28,
+    "anios": [
+      2008,
+      2009,
+      2010,
+      2012,
+      2013,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "131101",
+    "nombre": "Cascas",
     "departamento": "La Libertad",
     "conteo": 27,
     "anios": [
-      2005,
+      2013,
+      2017,
+      2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200409",
+    "nombre": "Santo Domingo",
+    "departamento": "Piura",
+    "conteo": 26,
+    "anios": [
+      2006,
+      2008,
+      2009,
+      2010,
       2011,
+      2012,
+      2013,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130302",
+    "nombre": "Bambamarca",
+    "departamento": "La Libertad",
+    "conteo": 25,
+    "anios": [
+      2003,
+      2005,
+      2009,
+      2012,
       2014,
       2017,
       2019,
@@ -674,25 +804,6 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "200206",
-    "nombre": "Pacaipampa",
-    "departamento": "Piura",
-    "conteo": 25,
-    "anios": [
-      2007,
-      2008,
-      2009,
-      2012,
-      2013,
-      2016,
-      2017,
-      2018,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
     "ubigeo": "200307",
     "nombre": "Sondor",
     "departamento": "Piura",
@@ -708,45 +819,6 @@
       2017,
       2019,
       2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200408",
-    "nombre": "Santa Catalina De Mossa",
-    "departamento": "Piura",
-    "conteo": 25,
-    "anios": [
-      2008,
-      2009,
-      2010,
-      2012,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200409",
-    "nombre": "Santo Domingo",
-    "departamento": "Piura",
-    "conteo": 25,
-    "anios": [
-      2006,
-      2008,
-      2009,
-      2010,
-      2012,
-      2013,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019
     ],
     "nivel": "alto"
   },
@@ -794,6 +866,27 @@
     "nivel": "alto"
   },
   {
+    "ubigeo": "200306",
+    "nombre": "San Miguel De El Faique",
+    "departamento": "Piura",
+    "conteo": 24,
+    "anios": [
+      2005,
+      2006,
+      2007,
+      2008,
+      2012,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
     "ubigeo": "200607",
     "nombre": "Querecotillo",
     "departamento": "Piura",
@@ -825,26 +918,47 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "131101",
-    "nombre": "Cascas",
+    "ubigeo": "130809",
+    "nombre": "Pataz",
     "departamento": "La Libertad",
     "conteo": 23,
     "anios": [
-      2013,
+      2009,
+      2010,
       2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200403",
+    "nombre": "Chalaco",
+    "departamento": "Piura",
+    "conteo": 23,
+    "anios": [
+      2008,
+      2012,
+      2015,
+      2016,
+      2017,
+      2018,
       2019
     ],
     "nivel": "alto"
   },
   {
-    "ubigeo": "131104",
-    "nombre": "Sayapullo",
+    "ubigeo": "130501",
+    "nombre": "Julcán",
     "departamento": "La Libertad",
-    "conteo": 23,
+    "conteo": 22,
     "anios": [
-      2005,
-      2006,
       2007,
+      2008,
+      2010,
+      2011,
+      2012,
+      2014,
       2017,
       2019
     ],
@@ -865,59 +979,6 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "200306",
-    "nombre": "San Miguel De El Faique",
-    "departamento": "Piura",
-    "conteo": 22,
-    "anios": [
-      2006,
-      2007,
-      2008,
-      2012,
-      2014,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200403",
-    "nombre": "Chalaco",
-    "departamento": "Piura",
-    "conteo": 22,
-    "anios": [
-      2008,
-      2012,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "130501",
-    "nombre": "Julcán",
-    "departamento": "La Libertad",
-    "conteo": 21,
-    "anios": [
-      2007,
-      2008,
-      2010,
-      2011,
-      2012,
-      2014,
-      2017,
-      2019
-    ],
-    "nivel": "alto"
-  },
-  {
     "ubigeo": "130905",
     "nombre": "Marcabal",
     "departamento": "La Libertad",
@@ -928,6 +989,20 @@
       2017,
       2018,
       2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "131006",
+    "nombre": "Quiruvilca",
+    "departamento": "La Libertad",
+    "conteo": 21,
+    "anios": [
+      2005,
+      2009,
+      2017,
+      2019,
+      2020
     ],
     "nivel": "alto"
   },
@@ -947,6 +1022,26 @@
       2016,
       2017,
       2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "140202",
+    "nombre": "Cañaris",
+    "departamento": "Lambayeque",
+    "conteo": 21,
+    "anios": [
+      2006,
+      2008,
+      2009,
+      2010,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018
     ],
     "nivel": "alto"
   },
@@ -1000,6 +1095,69 @@
       2017,
       2018,
       2019
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200501",
+    "nombre": "Paita",
+    "departamento": "Piura",
+    "conteo": 21,
+    "anios": [
+      2003,
+      2007,
+      2008,
+      2012,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130605",
+    "nombre": "Huaranchal",
+    "departamento": "La Libertad",
+    "conteo": 20,
+    "anios": [
+      2011,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130608",
+    "nombre": "Mache",
+    "departamento": "La Libertad",
+    "conteo": 20,
+    "anios": [
+      2007,
+      2010,
+      2012,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "130813",
+    "nombre": "Urpay",
+    "departamento": "La Libertad",
+    "conteo": 20,
+    "anios": [
+      2003,
+      2005,
+      2006,
+      2011,
+      2012,
+      2019,
+      2020
     ],
     "nivel": "alto"
   },
@@ -1098,29 +1256,48 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "130608",
-    "nombre": "Mache",
+    "ubigeo": "130613",
+    "nombre": "Sinsicap",
     "departamento": "La Libertad",
     "conteo": 19,
     "anios": [
-      2007,
-      2010,
-      2012,
       2017,
+      2018,
       2019,
       2020
     ],
     "nivel": "alto"
   },
   {
-    "ubigeo": "131006",
-    "nombre": "Quiruvilca",
+    "ubigeo": "130808",
+    "nombre": "Parcoy",
     "departamento": "La Libertad",
     "conteo": 19,
     "anios": [
-      2005,
       2009,
+      2016,
       2017,
+      2018,
+      2019,
+      2020
+    ],
+    "nivel": "alto"
+  },
+  {
+    "ubigeo": "200203",
+    "nombre": "Jilili",
+    "departamento": "Piura",
+    "conteo": 19,
+    "anios": [
+      2007,
+      2008,
+      2009,
+      2010,
+      2012,
+      2015,
+      2016,
+      2017,
+      2018,
       2019,
       2020
     ],
@@ -1148,24 +1325,33 @@
     "nivel": "alto"
   },
   {
-    "ubigeo": "140202",
-    "nombre": "Cañaris",
-    "departamento": "Lambayeque",
+    "ubigeo": "130401",
+    "nombre": "Chepén",
+    "departamento": "La Libertad",
     "conteo": 18,
     "anios": [
-      2006,
       2008,
-      2009,
       2010,
-      2012,
+      2017,
+      2018,
+      2019
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "130804",
+    "nombre": "Huancaspata",
+    "departamento": "La Libertad",
+    "conteo": 18,
+    "anios": [
+      2005,
       2013,
       2014,
-      2015,
-      2016,
       2017,
-      2018
+      2019,
+      2020
     ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
     "ubigeo": "200407",
@@ -1183,21 +1369,7 @@
       2018,
       2019
     ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "130401",
-    "nombre": "Chepén",
-    "departamento": "La Libertad",
-    "conteo": 17,
-    "anios": [
-      2008,
-      2010,
-      2017,
-      2018,
-      2019
-    ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
     "ubigeo": "130402",
@@ -1210,21 +1382,45 @@
       2018,
       2019
     ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
-    "ubigeo": "130809",
-    "nombre": "Pataz",
+    "ubigeo": "130903",
+    "nombre": "Cochorco",
     "departamento": "La Libertad",
     "conteo": 17,
     "anios": [
+      2006,
       2009,
-      2010,
       2017,
+      2020
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "131008",
+    "nombre": "Sitabamba",
+    "departamento": "La Libertad",
+    "conteo": 17,
+    "anios": [
+      2005,
+      2007,
+      2008,
       2019,
       2020
     ],
-    "nivel": "alto"
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "131102",
+    "nombre": "Lucma",
+    "departamento": "La Libertad",
+    "conteo": 17,
+    "anios": [
+      2017,
+      2019
+    ],
+    "nivel": "medio"
   },
   {
     "ubigeo": "140307",
@@ -1242,49 +1438,16 @@
       2017,
       2019
     ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "200203",
-    "nombre": "Jilili",
-    "departamento": "Piura",
-    "conteo": 17,
-    "anios": [
-      2007,
-      2008,
-      2009,
-      2010,
-      2012,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019
-    ],
-    "nivel": "alto"
-  },
-  {
-    "ubigeo": "130614",
-    "nombre": "Usquil",
-    "departamento": "La Libertad",
-    "conteo": 16,
-    "anios": [
-      2006,
-      2007,
-      2008,
-      2014,
-      2019,
-      2020
-    ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
     "ubigeo": "200207",
     "nombre": "Paimas",
     "departamento": "Piura",
-    "conteo": 16,
+    "conteo": 17,
     "anios": [
       2008,
+      2009,
       2012,
       2015,
       2016,
@@ -1293,7 +1456,22 @@
       2019,
       2020
     ],
-    "nivel": "alto"
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "130303",
+    "nombre": "Condormarca",
+    "departamento": "La Libertad",
+    "conteo": 16,
+    "anios": [
+      2009,
+      2011,
+      2015,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "medio"
   },
   {
     "ubigeo": "200305",
@@ -1311,11 +1489,11 @@
       2019,
       2020
     ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
-    "ubigeo": "200501",
-    "nombre": "Paita",
+    "ubigeo": "200601",
+    "nombre": "Sullana",
     "departamento": "Piura",
     "conteo": 16,
     "anios": [
@@ -1325,10 +1503,26 @@
       2016,
       2017,
       2018,
-      2019,
-      2020
+      2019
     ],
-    "nivel": "alto"
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "200801",
+    "nombre": "Sechura",
+    "departamento": "Piura",
+    "conteo": 16,
+    "anios": [
+      2006,
+      2007,
+      2008,
+      2011,
+      2012,
+      2016,
+      2017,
+      2019
+    ],
+    "nivel": "medio"
   },
   {
     "ubigeo": "240203",
@@ -1345,7 +1539,7 @@
       2019,
       2020
     ],
-    "nivel": "alto"
+    "nivel": "medio"
   },
   {
     "ubigeo": "130202",
@@ -1364,28 +1558,13 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130804",
-    "nombre": "Huancaspata",
+    "ubigeo": "130807",
+    "nombre": "Ongón",
     "departamento": "La Libertad",
     "conteo": 15,
     "anios": [
-      2005,
-      2013,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "131008",
-    "nombre": "Sitabamba",
-    "departamento": "La Libertad",
-    "conteo": 15,
-    "anios": [
-      2005,
-      2007,
-      2008,
+      2004,
+      2010,
       2019,
       2020
     ],
@@ -1473,53 +1652,6 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "200601",
-    "nombre": "Sullana",
-    "departamento": "Piura",
-    "conteo": 15,
-    "anios": [
-      2008,
-      2012,
-      2015,
-      2016,
-      2017,
-      2018,
-      2019
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "200801",
-    "nombre": "Sechura",
-    "departamento": "Piura",
-    "conteo": 15,
-    "anios": [
-      2006,
-      2007,
-      2008,
-      2011,
-      2012,
-      2016,
-      2017,
-      2019
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130302",
-    "nombre": "Bambamarca",
-    "departamento": "La Libertad",
-    "conteo": 14,
-    "anios": [
-      2003,
-      2012,
-      2014,
-      2017,
-      2019
-    ],
-    "nivel": "medio"
-  },
-  {
     "ubigeo": "130403",
     "nombre": "Pueblo Nuevo",
     "departamento": "La Libertad",
@@ -1534,30 +1666,29 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130808",
-    "nombre": "Parcoy",
+    "ubigeo": "130902",
+    "nombre": "Chugay",
     "departamento": "La Libertad",
     "conteo": 14,
     "anios": [
-      2009,
-      2016,
-      2017,
+      2005,
+      2007,
+      2011,
+      2014,
       2019,
       2020
     ],
     "nivel": "medio"
   },
   {
-    "ubigeo": "130813",
-    "nombre": "Urpay",
+    "ubigeo": "130904",
+    "nombre": "Curgos",
     "departamento": "La Libertad",
     "conteo": 14,
     "anios": [
-      2003,
-      2005,
-      2006,
-      2011,
-      2012,
+      2014,
+      2017,
+      2018,
       2019,
       2020
     ],
@@ -1592,6 +1723,23 @@
       2016,
       2017,
       2018,
+      2019
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "140203",
+    "nombre": "Incahuasi",
+    "departamento": "Lambayeque",
+    "conteo": 14,
+    "anios": [
+      2008,
+      2009,
+      2010,
+      2012,
+      2013,
+      2015,
+      2017,
       2019
     ],
     "nivel": "medio"
@@ -1648,53 +1796,10 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130605",
-    "nombre": "Huaranchal",
-    "departamento": "La Libertad",
-    "conteo": 13,
-    "anios": [
-      2011,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130613",
-    "nombre": "Sinsicap",
-    "departamento": "La Libertad",
-    "conteo": 13,
-    "anios": [
-      2017,
-      2018,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "140203",
-    "nombre": "Incahuasi",
-    "departamento": "Lambayeque",
-    "conteo": 13,
-    "anios": [
-      2008,
-      2009,
-      2010,
-      2012,
-      2013,
-      2015,
-      2017,
-      2019
-    ],
-    "nivel": "medio"
-  },
-  {
     "ubigeo": "200706",
     "nombre": "Mancora",
     "departamento": "Piura",
-    "conteo": 13,
+    "conteo": 14,
     "anios": [
       2008,
       2012,
@@ -1706,26 +1811,29 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130904",
-    "nombre": "Curgos",
+    "ubigeo": "130611",
+    "nombre": "Salpo",
     "departamento": "La Libertad",
-    "conteo": 12,
+    "conteo": 13,
     "anios": [
+      2010,
+      2014,
       2017,
-      2018,
       2019,
       2020
     ],
     "nivel": "medio"
   },
   {
-    "ubigeo": "131102",
-    "nombre": "Lucma",
+    "ubigeo": "130811",
+    "nombre": "Santiago De Challas",
     "departamento": "La Libertad",
-    "conteo": 12,
+    "conteo": 13,
     "anios": [
+      2010,
       2017,
-      2019
+      2019,
+      2020
     ],
     "nivel": "medio"
   },
@@ -1733,12 +1841,42 @@
     "ubigeo": "200110",
     "nombre": "La Unión",
     "departamento": "Piura",
-    "conteo": 12,
+    "conteo": 13,
     "anios": [
+      2007,
       2008,
       2009,
       2015,
       2016,
+      2017,
+      2019
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "130101",
+    "nombre": "Trujillo",
+    "departamento": "La Libertad",
+    "conteo": 12,
+    "anios": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2017,
+      2019,
+      2020
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "130604",
+    "nombre": "Charat",
+    "departamento": "La Libertad",
+    "conteo": 12,
+    "anios": [
+      2006,
       2017,
       2019
     ],
@@ -1790,33 +1928,12 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130101",
-    "nombre": "Trujillo",
+    "ubigeo": "120302",
+    "nombre": "Bolívar",
     "departamento": "La Libertad",
     "conteo": 11,
     "anios": [
-      2010,
-      2011,
-      2012,
-      2013,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130303",
-    "nombre": "Condormarca",
-    "departamento": "La Libertad",
-    "conteo": 11,
-    "anios": [
-      2009,
-      2011,
-      2015,
-      2017,
-      2019,
-      2020
+      2019
     ],
     "nivel": "medio"
   },
@@ -1834,28 +1951,13 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130611",
-    "nombre": "Salpo",
-    "departamento": "La Libertad",
-    "conteo": 11,
-    "anios": [
-      2010,
-      2014,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130902",
-    "nombre": "Chugay",
+    "ubigeo": "130803",
+    "nombre": "Chillia",
     "departamento": "La Libertad",
     "conteo": 11,
     "anios": [
       2005,
-      2011,
-      2014,
+      2009,
       2019,
       2020
     ],
@@ -1967,32 +2069,6 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "130803",
-    "nombre": "Chillia",
-    "departamento": "La Libertad",
-    "conteo": 10,
-    "anios": [
-      2005,
-      2009,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130811",
-    "nombre": "Santiago De Challas",
-    "departamento": "La Libertad",
-    "conteo": 10,
-    "anios": [
-      2010,
-      2017,
-      2019,
-      2020
-    ],
-    "nivel": "medio"
-  },
-  {
     "ubigeo": "131202",
     "nombre": "Chao",
     "departamento": "La Libertad",
@@ -2092,6 +2168,17 @@
       2006,
       2010,
       2017
+    ],
+    "nivel": "medio"
+  },
+  {
+    "ubigeo": "130610",
+    "nombre": "Paranday",
+    "departamento": "La Libertad",
+    "conteo": 9,
+    "anios": [
+      2019,
+      2020
     ],
     "nivel": "medio"
   },
@@ -2235,14 +2322,30 @@
     "nivel": "medio"
   },
   {
-    "ubigeo": "120302",
-    "nombre": "Bolívar",
+    "ubigeo": "130304",
+    "nombre": "Longotea",
     "departamento": "La Libertad",
     "conteo": 8,
     "anios": [
+      2006,
+      2019,
+      2020
+    ],
+    "nivel": "bajo"
+  },
+  {
+    "ubigeo": "130305",
+    "nombre": "Uchumarca",
+    "departamento": "La Libertad",
+    "conteo": 8,
+    "anios": [
+      2005,
+      2007,
+      2011,
+      2017,
       2019
     ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "130306",
@@ -2255,19 +2358,7 @@
       2019,
       2020
     ],
-    "nivel": "medio"
-  },
-  {
-    "ubigeo": "130604",
-    "nombre": "Charat",
-    "departamento": "La Libertad",
-    "conteo": 8,
-    "anios": [
-      2006,
-      2017,
-      2019
-    ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "140107",
@@ -2282,7 +2373,7 @@
       2019,
       2020
     ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "140205",
@@ -2297,7 +2388,7 @@
       2017,
       2019
     ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "140301",
@@ -2311,7 +2402,7 @@
       2012,
       2017
     ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "140308",
@@ -2326,7 +2417,7 @@
       2017,
       2019
     ],
-    "nivel": "medio"
+    "nivel": "bajo"
   },
   {
     "ubigeo": "130104",
@@ -2369,13 +2460,38 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130304",
-    "nombre": "Longotea",
+    "ubigeo": "130805",
+    "nombre": "Huaylillas",
     "departamento": "La Libertad",
     "conteo": 7,
     "anios": [
-      2006,
-      2019
+      2009,
+      2019,
+      2020
+    ],
+    "nivel": "bajo"
+  },
+  {
+    "ubigeo": "130806",
+    "nombre": "Huayo",
+    "departamento": "La Libertad",
+    "conteo": 7,
+    "anios": [
+      2005,
+      2019,
+      2020
+    ],
+    "nivel": "bajo"
+  },
+  {
+    "ubigeo": "131007",
+    "nombre": "Santa Cruz De Chuca",
+    "departamento": "La Libertad",
+    "conteo": 7,
+    "anios": [
+      2017,
+      2019,
+      2020
     ],
     "nivel": "bajo"
   },
@@ -2519,6 +2635,18 @@
     "nivel": "bajo"
   },
   {
+    "ubigeo": "200805",
+    "nombre": "Vice",
+    "departamento": "Piura",
+    "conteo": 7,
+    "anios": [
+      2012,
+      2016,
+      2017
+    ],
+    "nivel": "bajo"
+  },
+  {
     "ubigeo": "130108",
     "nombre": "Poroto",
     "departamento": "La Libertad",
@@ -2543,18 +2671,6 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130806",
-    "nombre": "Huayo",
-    "departamento": "La Libertad",
-    "conteo": 6,
-    "anios": [
-      2005,
-      2019,
-      2020
-    ],
-    "nivel": "bajo"
-  },
-  {
     "ubigeo": "130810",
     "nombre": "Pias",
     "departamento": "La Libertad",
@@ -2567,27 +2683,14 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130903",
-    "nombre": "Cochorco",
+    "ubigeo": "130906",
+    "nombre": "Sanagorán",
     "departamento": "La Libertad",
     "conteo": 6,
     "anios": [
-      2006,
+      2007,
       2009,
-      2017,
-      2020
-    ],
-    "nivel": "bajo"
-  },
-  {
-    "ubigeo": "131007",
-    "nombre": "Santa Cruz De Chuca",
-    "departamento": "La Libertad",
-    "conteo": 6,
-    "anios": [
-      2017,
-      2019,
-      2020
+      2019
     ],
     "nivel": "bajo"
   },
@@ -2656,30 +2759,6 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "200805",
-    "nombre": "Vice",
-    "departamento": "Piura",
-    "conteo": 6,
-    "anios": [
-      2012,
-      2016,
-      2017
-    ],
-    "nivel": "bajo"
-  },
-  {
-    "ubigeo": "130305",
-    "nombre": "Uchumarca",
-    "departamento": "La Libertad",
-    "conteo": 5,
-    "anios": [
-      2007,
-      2017,
-      2019
-    ],
-    "nivel": "bajo"
-  },
-  {
     "ubigeo": "130502",
     "nombre": "Calamarca",
     "departamento": "La Libertad",
@@ -2692,13 +2771,13 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130610",
-    "nombre": "Paranday",
+    "ubigeo": "130606",
+    "nombre": "La Cuesta",
     "departamento": "La Libertad",
     "conteo": 5,
     "anios": [
-      2019,
-      2020
+      2017,
+      2019
     ],
     "nivel": "bajo"
   },
@@ -2709,30 +2788,6 @@
     "conteo": 5,
     "anios": [
       2017
-    ],
-    "nivel": "bajo"
-  },
-  {
-    "ubigeo": "130805",
-    "nombre": "Huaylillas",
-    "departamento": "La Libertad",
-    "conteo": 5,
-    "anios": [
-      2009,
-      2019,
-      2020
-    ],
-    "nivel": "bajo"
-  },
-  {
-    "ubigeo": "130906",
-    "nombre": "Sanagorán",
-    "departamento": "La Libertad",
-    "conteo": 5,
-    "anios": [
-      2007,
-      2009,
-      2019
     ],
     "nivel": "bajo"
   },
@@ -2883,19 +2938,6 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130807",
-    "nombre": "Ongón",
-    "departamento": "La Libertad",
-    "conteo": 4,
-    "anios": [
-      2004,
-      2010,
-      2019,
-      2020
-    ],
-    "nivel": "bajo"
-  },
-  {
     "ubigeo": "131005",
     "nombre": "Mollepata",
     "departamento": "La Libertad",
@@ -2953,12 +2995,11 @@
     "nivel": "bajo"
   },
   {
-    "ubigeo": "130606",
-    "nombre": "La Cuesta",
+    "ubigeo": "120419",
+    "nombre": "Calamarca",
     "departamento": "La Libertad",
     "conteo": 3,
     "anios": [
-      2017,
       2019
     ],
     "nivel": "bajo"
@@ -3005,16 +3046,6 @@
     "anios": [
       2016,
       2017
-    ],
-    "nivel": "bajo"
-  },
-  {
-    "ubigeo": "120419",
-    "nombre": "Calamarca",
-    "departamento": "La Libertad",
-    "conteo": 2,
-    "anios": [
-      2019
     ],
     "nivel": "bajo"
   },
