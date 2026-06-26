@@ -21,8 +21,10 @@ OUT_CSV = REPO / "data/processed/sinpad_costa_norte.csv"
 
 COSTA_NORTE = {"TUMBES", "PIURA", "LAMBAYEQUE", "LA LIBERTAD"}
 # Fenómenos asociados a lluvia/Niño. Filtro por "contiene", insensible a tildes/mayúsculas.
-# (Strings reales del campo EMERGENCIA verificados en la BD: 'LLUVIA INTENSA', 'INUNDACIÓN', 'HUAYCO'.)
-FENOMENO_RE = re.compile(r"LLUVIA|INUNDAC|HUAYCO", re.IGNORECASE)
+# Strings reales del campo EMERGENCIA verificados en la BD: 'LLUVIA INTENSA', 'INUNDACIÓN',
+# 'HUAYCO', 'DESLIZAMIENTO'. Se incluye DESLIZ porque CONTEXT.md lista explícitamente
+# "Huayco / Movimiento en masa" (los deslizamientos son movimiento en masa gatillado por lluvia).
+FENOMENO_RE = re.compile(r"LLUVIA|INUNDAC|HUAYCO|DESLIZ", re.IGNORECASE)
 
 
 def strip_accents(s) -> str:
