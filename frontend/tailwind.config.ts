@@ -16,16 +16,19 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['var(--font-display)', 'Georgia', 'serif'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        display: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Identidad Vigía: teal "marea" (frío, vigilante) + rampa cálida (memoria del agua).
-        ink: '#07302E',
-        canvas: '#F6F5F1',
-        ember: '#EA7B27',
-        oxblood: '#A01C1C',
-        sand: '#BBB3A6',
+        // Identidad Vigía (refinada): teal cívico + acento dorado; escala de inundación.
+        ink: '#0f3a47',
+        gold: '#f0a93a',
+        paper: '#f4f6f8',
+        floodNone: '#9aa3ab',
+        floodLow: '#e3b23c',
+        floodMid: '#e07c2a',
+        floodHigh: '#d23b3b',
+        whatsapp: '#1faa4f',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
