@@ -1,46 +1,48 @@
 # Vigía
 
-> Plataforma de alerta temprana y memoria del Fenómeno El Niño para Perú: convierte un fenómeno abstracto en una respuesta personal y accionable — *tu distrito, tu historial, tu plan*.
+> Plataforma de **alerta temprana y memoria del Fenómeno El Niño** para la costa norte del Perú.
+> Convierte la memoria pública del Niño en un momento personal — *tu distrito, cuántas veces se inundó, y qué hacer hoy* — traduciendo lo que el Estado ya publica.
 
-Proyecto para el **Torneo de Vibecoding 2026 (GDG Open × DSCPUCP)**: un starter Next.js + Django cableado sobre endpoints mock, con núcleo de testing en ambos lados y la estructura de documentación que premia el rúbrica.
+Proyecto para el **Torneo de Vibecoding 2026 (GDG Open × DSCPUCP)**.
 
-📄 **Brief completo del proyecto:** [`docs/vigia-brief.md`](docs/vigia-brief.md) — contexto, problema, principio de diseño (agencia, no amenaza), fuentes de datos, arquitectura, alcance del MVP y preguntas abiertas. Es el documento semilla para `grill-me` / `/specify`.
+## Problemática y usuario
 
-## Problem & Target User
+El Fenómeno El Niño golpea al Perú de forma **recurrente y predecible**: los mismos distritos se inundan evento tras evento. El Estado **sí produce buena información** (ENFEN, SENAMHI, INDECI, CENEPRED), pero está fragmentada en varias instituciones, encerrada en PDFs y portales sin API, y **sin traducir a acción**. El problema no es falta de datos; es falta de una **capa de traducción**.
 
-El Fenómeno El Niño golpea al Perú de forma recurrente y predecible: los mismos distritos se inundan evento tras evento. El Estado **sí produce buena información** (ENFEN, SENAMHI, INDECI, CENEPRED), pero está fragmentada en varias instituciones, encerrada en PDFs y portales sin API, y **sin traducir a acción**. El problema no es falta de datos; es falta de una **capa de traducción**.
+- **Usuario:** ciudadano en un distrito de riesgo de la costa norte (Tumbes, Piura, Lambayeque, La Libertad), no experto.
+- **Pregunta que respondemos:** *"Para mi distrito — ¿qué me ha pasado antes, qué viene, y qué hago hoy?"*
+- **Salida:** memoria histórica del distrito **+** estado actual del riesgo (ENFEN) **+** recomendación accionable (checklist INDECI).
+- **Principio de diseño:** *agencia, no amenaza* — toda respuesta termina en memoria + nivel de riesgo + acción, nunca en un diagnóstico binario.
 
-- **Usuario:** ciudadano en un distrito de riesgo (costa norte / zonas inundables), no experto.
-- **Pregunta que respondemos:** "Para mi distrito — ¿qué me ha pasado antes, qué viene, y qué hago hoy?"
-- **Salida:** memoria histórica del distrito + estado actual del riesgo + recomendación accionable.
+## MVP (una sola pantalla)
 
-Detalle completo en el [brief](docs/vigia-brief.md) (§2 Problema, §4 Principio de diseño, §5 Usuario).
+1. **Mapa choropleth de costa norte** (~10–15 distritos para la demo): color = **conteo crudo** de emergencias por lluvia/inundación (SINPAD, filtrado por fenómeno), sin normalizar. Distritos sin registro en **gris explícito** ("sin emergencias registradas ≠ sin riesgo"); nunca verde.
+2. **Panel "tu distrito"** (clic en mapa / dropdown): histórico (N emergencias, qué años) + riesgo histórico **y** estado ENFEN actual **yuxtapuestos** (sin fórmula combinada) + **checklist curado de INDECI** por nivel.
+3. **Disclaimer al pie:** *"información de referencia, no reemplaza a las autoridades oficiales (INDECI/ENFEN)."*
 
-## MVP (6 horas) — una sola pantalla
+Alcance cerrado y decisiones bloqueadas en [`CONTEXT.md`](CONTEXT.md).
 
-1. **Mapa choropleth distrital** con memoria histórica real (SINPAD): cada distrito coloreado por cuántas veces lo golpeó el Niño.
-2. **Panel "tu distrito"** (al hacer clic): histórico + estado actual del ENFEN resumido por IA + un "qué hacer" accionable.
+## Stack tecnológico
 
-Alcance, *out of scope* y la regla de oro ("una fuente real bien hecha le gana a cinco mockeadas") en el [brief §8](docs/vigia-brief.md).
-
-## Tech Stack
-
-| Layer | Choice | Deploy |
+| Capa | Elección | Notas |
 |---|---|---|
-| Frontend | Next.js (App Router) + TypeScript + Leaflet | Vercel |
-| Backend | Python + Django (REST Framework) | Railway / AWS |
-| Database | Postgres + PostGIS | — |
-| Testing | Jest (frontend), PyTest (backend) | — |
+| Frontend | Next.js 14 (App Router) + React 18 + TypeScript | Mapa con **Leaflet**; geoloc point-in-polygon con **Turf.js** (botón secundario). Deploy en **Vercel**. |
+| UI | **Tailwind CSS v3 + shadcn/ui** | Componentes en `frontend/src/components/ui`. |
+| Backend | Python + **Django + Django REST Framework** | Sirve **JSON estático precocido**. Deploy en **Railway** (gunicorn). |
+| Datos | **JSON estático precocido** (sin DB en runtime) | SINPAD + GeoJSON IGN procesados *offline*; nada en vivo en la demo. Postgres/PostGIS = roadmap. |
+| Testing | Jest (frontend), PyTest (backend) | Núcleo de testing en ambos lados. |
 
-> El brief §7 plantea una arquitectura de referencia en TypeScript (Hono · Drizzle); este repo arranca con el starter Django + Next.js ya cableado. Confirmar el stack final en `grill-me` antes de construir.
+> Arquitectura completa (módulos, flujo de datos, secuencia, modelo de datos, despliegue): [`docs/architecture.md`](docs/architecture.md).
 
-## AI Models
+## Modelos y herramientas de IA
 
-Resumen accionable del comunicado ENFEN por nivel de riesgo (comunicado técnico → "qué hacer") vía **Vercel AI SDK**. Modelos concretos a definir.
+- **Para la demo:** el resumen del comunicado **ENFEN** es **texto precomputado** (2–3 frases en lenguaje claro), coherente con la regla "nada en vivo". La IA es **una sola función acotada — resumir, no recomendar** — y es el *cierre* de la narrativa, no el héroe.
+- **El "qué hacer" NO es generado por IA:** es un **checklist curado** de guías oficiales de INDECI por nivel de riesgo (evita alucinaciones peligrosas en un dominio de seguridad).
+- **Roadmap:** llamada real a un LLM para resumir el comunicado ENFEN en vivo por nivel de riesgo.
 
-## Local Setup
+## Instrucciones para correr el proyecto localmente
 
-This is a monorepo with two independent apps. Run each in its own terminal.
+Monorepo con dos apps independientes. Corre cada una en su propia terminal.
 
 **Backend** (`http://localhost:8000`)
 ```bash
@@ -58,36 +60,40 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-## Tests
-
+### Tests
 ```bash
 cd backend && pytest
 cd frontend && npm test
 ```
 
-## Project Structure
+## Integrantes y roles
+
+| Integrante | Rol en el proyecto |
+|---|---|
+| **Luis** | **Datos** — baja el CSV de SINPAD, filtra por fenómeno, agrupa por ubigeo y reconcilia el GeoJSON de costa norte; produce los JSON precocidos para `backend/api/`. |
+| **Valeria** | **Frontend / mapa** — Next.js + Leaflet: choropleth, panel "tu distrito" y documentación. |
+| **Jhair** | **IA + integración** — resumen del comunicado ENFEN, checklist por nivel y ensamblado end-to-end. |
+
+## Enlaces a documentación adicional
+
+- 📐 [`docs/architecture.md`](docs/architecture.md) — diagramas de arquitectura (Mermaid): módulos, flujo de datos, secuencia, modelo de datos y despliegue.
+- 🎯 [`CONTEXT.md`](CONTEXT.md) — alcance cerrado y decisiones bloqueadas (entrada para Spec Kit).
+- 📄 [`docs/vigia-brief.md`](docs/vigia-brief.md) — brief extendido: contexto, fuentes de datos, justificación.
+- ✅ [`docs/hito-1.md`](docs/hito-1.md) — checklist de cumplimiento del Hito 1.
+- 📋 [`docs/tournament_rules.md`](docs/tournament_rules.md) · 🧰 [`docs/stack_and_resources.md`](docs/stack_and_resources.md) · 🏛️ [`docs/adr/`](docs/adr/)
+
+## Estructura del proyecto
 
 ```
 .
-├── backend/          # Django app (mock endpoints + PyTest)
-├── frontend/         # Next.js app (typed API client + Jest)
-└── docs/             # Rules, stack notes, architecture diagrams, ADRs
-    ├── vigia-brief.md       # ← project brief (seed for grill-me / /specify)
-    ├── tournament_rules.md
-    ├── stack_and_resources.md
-    └── adr/          # Architecture Decision Records
+├── backend/          # Django + DRF (sirve JSON precocido; PyTest)
+├── frontend/         # Next.js + Leaflet + shadcn/ui (Jest)
+├── docs/
+│   ├── architecture.md     # ← diagramas de arquitectura (Hito 1)
+│   ├── hito-1.md           # checklist del Hito 1
+│   ├── vigia-brief.md      # brief extendido
+│   ├── tournament_rules.md
+│   ├── stack_and_resources.md
+│   └── adr/                # Architecture Decision Records
+└── CONTEXT.md        # alcance cerrado (Spec Kit)
 ```
-
-## Team
-
-Reparto por área (brief §9):
-
-| Member | Área |
-|---|---|
-| Valeria | _por confirmar_ |
-| Jhair | _por confirmar_ |
-| Luis | _por confirmar_ |
-
-- **Datos:** baja CSV de SINPAD, agrupa por ubigeo, genera JSON de conteos + GeoJSON distrital (IGN).
-- **Frontend/mapa:** Next.js + Leaflet, choropleth distrital + panel de detalle.
-- **IA + integración:** Vercel AI SDK, resumen accionable del comunicado ENFEN por nivel de riesgo; pega todo.
