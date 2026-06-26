@@ -61,12 +61,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASES = {
-    "default": dj_database_url.config(
+def database_config(*, conn_max_age):
+    """Build the DATABASES["default"] entry from DATABASE_URL.
+
+    Sanitizes the connection so it works behind a transaction pooler
+    (Supabase pgbouncer on :6543) with psycopg3:
+
+    - Drops the ``pgbouncer`` query param. It's a Prisma/Supabase-docs flag,
+      not a libpq option; dj-database-url forwards it into OPTIONS and
+      psycopg3 raises ``invalid connection option "pgbouncer"``.
+    - Sets ``prepare_threshold=None`` to disable server-side prepared
+      statements, which pgbouncer transaction-pooling mode does not support.
+    """
+    config = dj_database_url.config(
         default="postgres://vigia:vigia@localhost:5432/vigia",
-        conn_max_age=600,
+        conn_max_age=conn_max_age,
     )
-}
+    options = config.setdefault("OPTIONS", {})
+    options.pop("pgbouncer", None)
+    options.setdefault("prepare_threshold", None)
+    return config
+
+
+DATABASES = {"default": database_config(conn_max_age=600)}
 
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
