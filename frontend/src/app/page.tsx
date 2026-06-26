@@ -125,9 +125,20 @@ export default function Home() {
     // Distritos desde la API en vivo (BD vía backend). Checklists y ENFEN siguen en
     // estático por ahora (no hay endpoint de checklists y el resumen ENFEN requiere la
     // API key de Claude); se conectan en la siguiente fase.
+    // Intenta la API en vivo; si no está disponible (p. ej. Vercel sin backend),
+    // cae al JSON estático empaquetado para que la demo nunca quede vacía.
     loadDistricts()
-      .then(setDistricts)
-      .catch((e) => console.error('No se pudo cargar distritos de la API:', e))
+      .then((d) => {
+        if (Object.keys(d).length) setDistricts(d)
+        else throw new Error('API vacía')
+      })
+      .catch(() =>
+        fetch('/data/districts.json')
+          .then((r) => r.json())
+          .then((rows: District[]) =>
+            setDistricts(Object.fromEntries(rows.map((d) => [d.ubigeo, d])))
+          )
+      )
     fetch('/data/checklists.json').then((r) => r.json()).then(setChecklists)
     fetch('/data/enfen.json').then((r) => r.json()).then(setEnfen)
   }, [])
