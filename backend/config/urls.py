@@ -1,9 +1,9 @@
+from django.contrib import admin
 from django.urls import include, path
 
-from api.views import health
-
 urlpatterns = [
-    # Liveness probe used by deploy platforms and the frontend connectivity check.
-    path("health", health, name="health"),
-    path("api/", include("api.urls")),
+    path("admin/", admin.site.urls),
+    path("health", include("apps.core.health")),
+    path("api/", include("apps.districts.api.v1.urls")),
+    path("api/", include("apps.enfen.api.v1.urls")),
 ]

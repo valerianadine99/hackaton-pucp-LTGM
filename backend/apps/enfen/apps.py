@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ApiConfig(AppConfig):
+class EnfenConfig(AppConfig):
+    name = "apps.enfen"
     default_auto_field = "django.db.models.BigAutoField"
-    name = "api"
