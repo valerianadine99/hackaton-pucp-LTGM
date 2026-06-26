@@ -59,22 +59,25 @@ export default function MapView({ districts, selected, onSelect }: Props) {
         },
       }).addTo(map)
 
-      map.fitBounds(layer.getBounds(), { padding: [12, 12] })
-      // Leaflet en flexbox a veces inicia con altura 0; reajustar varias veces tras el layout.
-      ;[80, 300, 700].forEach((ms) =>
-        setTimeout(() => {
-          if (cancelled || !mapRef.current) return
-          map.invalidateSize()
-          map.fitBounds(layer.getBounds(), { padding: [12, 12] })
-        }, ms)
-      )
-      // Reajustar al cambiar tamaño (rotación / breakpoint móvil↔desktop).
-      const onResize = () => {
+      const bounds = layer.getBounds()
+      map.fitBounds(bounds, { padding: [12, 12] })
+
+      // En móvil/flexbox el contenedor suele iniciar con altura 0 y asentarse tarde, lo que
+      // deja el mapa en blanco. Un ResizeObserver reajusta el mapa cada vez que el contenedor
+      // cambia de tamaño (más fiable que timers fijos) → resuelve el "mapa en blanco" móvil.
+      const refit = () => {
+        if (cancelled || !mapRef.current) return
         map.invalidateSize()
-        map.fitBounds(layer.getBounds(), { padding: [12, 12] })
+        if (bounds.isValid()) map.fitBounds(bounds, { padding: [12, 12] })
       }
-      window.addEventListener('resize', onResize)
-      resizeCleanupRef.current = () => window.removeEventListener('resize', onResize)
+      const ro = new ResizeObserver(() => refit())
+      ro.observe(containerRef.current)
+      window.addEventListener('resize', refit)
+      requestAnimationFrame(refit) // primer reajuste tras el primer paint
+      resizeCleanupRef.current = () => {
+        ro.disconnect()
+        window.removeEventListener('resize', refit)
+      }
     })()
 
     return () => {
