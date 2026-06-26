@@ -34,3 +34,6 @@ coverage/
 .DS_Store
 .vscode/
 .idea/
+
+# Claude Code — ajustes locales/personales (no compartir)
+.claude/settings.local.json
