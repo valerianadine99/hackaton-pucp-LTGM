@@ -32,7 +32,7 @@
 |---|---|
 | Alcance cerrado / decisiones bloqueadas | [`CONTEXT.md`](../CONTEXT.md) |
 | Brief extendido (contexto, fuentes, justificación) | [`docs/vigia-brief.md`](vigia-brief.md) |
-| Modelo de datos (esquemas JSON precocidos) | [`docs/architecture.md`](architecture.md) §4 |
+| Modelo de datos (PostgreSQL / Django ORM) | [`docs/architecture.md`](architecture.md) §4 |
 | Diagrama de despliegue | [`docs/architecture.md`](architecture.md) §5 |
 | ADR (decisiones de arquitectura) | [`docs/adr/`](adr/) |
 
@@ -45,4 +45,4 @@
 
 ## Resumen de la arquitectura (1 párrafo)
 
-Monolito pragmático: **frontend Next.js 14 + Leaflet** ↔ **backend Django + DRF**, acoplados solo por un contrato HTTP/JSON. El backend **no usa base de datos en runtime**: sirve **JSON estático precocido** que el equipo de Datos genera *offline* a partir del CSV de SINPAD (filtrado por fenómeno de lluvia, agrupado por ubigeo) y del GeoJSON distrital del IGN. El mapa choropleth de costa norte es el clímax; al hacer clic en un distrito, el panel yuxtapone memoria histórica y estado ENFEN, y cierra con un checklist curado de INDECI. **Nada en vivo en la demo.** Detalle completo en [`docs/architecture.md`](architecture.md).
+Monolito pragmático: **frontend Next.js 14 + Leaflet** ↔ **backend Django + DRF**, acoplados solo por un contrato HTTP/JSON. El backend usa **PostgreSQL en AWS RDS** (desplegado en **EC2 con Elastic IP**) como fuente única de verdad: un **ETL** (management command) lo puebla con la data real de SINPAD (filtrada por fenómeno de lluvia, agrupada por ubigeo), el GeoJSON distrital del IGN (como GeoJSON en `JSONField`) y el resumen de ENFEN generado por una **llamada real a Claude** (cacheada en BD). El mapa choropleth de costa norte es el clímax; al hacer clic en un distrito, el panel yuxtapone memoria histórica y estado ENFEN, y cierra con un checklist curado de INDECI. **Integración real con datos reales, nada fake.** Detalle completo en [`docs/architecture.md`](architecture.md).

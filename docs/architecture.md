@@ -1,8 +1,8 @@
 # Vigía — Arquitectura
 
-> Diagramas del prototipo de arquitectura (Hito 1). Alcance cerrado en [`CONTEXT.md`](../CONTEXT.md); justificación extendida en [`vigia-brief.md`](vigia-brief.md).
+> Diagramas del prototipo de arquitectura (Hito 1). Alcance cerrado en [`CONTEXT.md`](../CONTEXT.md); principios en [`constitution`](../.specify/memory/constitution.md) (v2.0.0); justificación extendida en [`vigia-brief.md`](vigia-brief.md).
 >
-> **Principio rector:** monolito pragmático, nada en vivo en la demo. El frontend consume **JSON estático precocido** servido por una API Django; el dato real de SINPAD se procesa **offline** antes del evento.
+> **Principio rector:** monolito pragmático con **integración real y datos reales**. El frontend (Next.js) consume una API Django DRF que sirve datos desde una **base de datos real PostgreSQL en AWS RDS**. Un **ETL** carga la data de las fuentes oficiales (SINPAD, ENFEN, GeoJSON IGN/INEI) en la BD antes/durante el evento; la app sirve esa data **en vivo desde la BD**. El resumen ENFEN se genera con una **llamada real al modelo Claude (Anthropic)**, cacheada en la BD. Nada hardcodeado ni fake. Toda la información vive en el backend (Principio VIII: escalabilidad y mantenibilidad).
 
 ---
 
@@ -10,51 +10,77 @@
 
 ```mermaid
 flowchart TB
-    subgraph offline["🛠️ Pipeline de datos (OFFLINE, pre-evento)"]
-        direction TB
-        sinpad["SINPAD CSV<br/>(datosabiertos.gob.pe)<br/>emergencias 2003→hoy"]
-        ign["GeoJSON distrital<br/>(IGN / INEI)<br/>polígonos por ubigeo"]
-        enfenSrc["Comunicado ENFEN<br/>(PDF/texto, precargado)"]
-        etl["Script de Datos<br/>filtra fenómeno · agrupa por ubigeo · reconcilia ubigeos"]
-        sinpad --> etl
-        ign --> etl
-        etl --> districtsJson["districts.json<br/>{ubigeo, nombre, conteo, nivel, anios[]}"]
-        etl --> geo["northcoast.geojson<br/>(asset del frontend)"]
-        enfenSrc --> enfenTxt["enfen_summary.json<br/>(texto resumido, 2-3 frases)"]
+    subgraph sources["🌐 Fuentes oficiales (públicas)"]
+        sinpad["SINPAD CSV<br/>datosabiertos.gob.pe<br/>emergencias 2003→hoy"]
+        ign["GeoJSON distrital<br/>IGN / INEI<br/>polígonos por ubigeo"]
+        enfenSrc["Comunicado ENFEN<br/>enfen.imarpe.gob.pe"]
+    end
+
+    subgraph etl["🛠️ ETL de ingesta (Django management command)"]
+        load["Filtra fenómeno · agrupa por ubigeo · reconcilia ubigeos · asigna nivel"]
     end
 
     subgraph backend["⚙️ Backend — Django + DRF (backend/)"]
-        api["REST API<br/>sirve JSON precocido"]
-        districtsJson --> api
-        enfenTxt --> api
-        checklists["checklists.json<br/>guías INDECI por nivel (curado)"] --> api
+        api["REST API (DRF)<br/>serializers + vistas"]
+        orm["ORM / modelos"]
+        api <--> orm
+    end
+
+    subgraph db["🗄️ PostgreSQL — AWS RDS"]
+        tDistrict[("districts<br/>ubigeo, nombre, conteo, nivel, anios")]
+        tGeo[("geometría distrital<br/>GeoJSON en JSONField")]
+        tChecklist[("checklists INDECI<br/>por nivel")]
+        tEnfen[("enfen_summary<br/>resumen Claude, cacheado")]
+    end
+
+    subgraph ai["🤖 Claude (Anthropic)"]
+        claude["API — resume el comunicado ENFEN<br/>a 2-3 frases (llamada real)"]
     end
 
     subgraph frontend["🖥️ Frontend — Next.js 14 + React 18 (frontend/)"]
-        map["Mapa choropleth<br/>(Leaflet)"]
-        panel["Panel #quot;tu distrito#quot;<br/>histórico · ENFEN · checklist"]
+        map["Mapa choropleth (Leaflet)"]
+        panel["Panel tu distrito<br/>histórico · ENFEN · checklist"]
         geoloc["Geoloc (botón 2º)<br/>point-in-polygon · Turf.js"]
-        geo --> map
     end
 
-    user(["👤 Ciudadano<br/>costa norte"])
+    user(["👤 Ciudadano<br/>costa norte (móvil)"])
+
+    sinpad --> load
+    ign --> load
+    enfenSrc --> load
+    load --> orm
+    enfenSrc -.->|texto crudo| claude
+    claude -.->|resumen real| orm
+    orm <--> tDistrict
+    orm <--> tGeo
+    orm <--> tChecklist
+    orm <--> tEnfen
 
     user -->|"clic en distrito / dropdown"| map
     map -->|"GET /api/districts"| api
     panel -->|"GET /api/districts/{ubigeo}"| api
     panel -->|"GET /api/enfen"| api
     map --> panel
-    geoloc -.->|"ubigeo detectado"| panel
+    map -.->|"polígonos GeoJSON (asset servido por API)"| geoloc
+    geoloc -.->|"ubigeo detectado (Turf.js)"| panel
 
-    classDef off fill:#fff7ed,stroke:#fb923c,color:#7c2d12;
+    classDef src fill:#fff7ed,stroke:#fb923c,color:#7c2d12;
     classDef be fill:#eff6ff,stroke:#3b82f6,color:#1e3a8a;
+    classDef store fill:#faf5ff,stroke:#a855f7,color:#581c87;
+    classDef aicls fill:#fdf2f8,stroke:#ec4899,color:#831843;
     classDef fe fill:#f0fdf4,stroke:#22c55e,color:#14532d;
-    class sinpad,ign,enfenSrc,etl,districtsJson,geo,enfenTxt off;
-    class api,checklists be;
+    class sinpad,ign,enfenSrc,load src;
+    class api,orm be;
+    class tDistrict,tGeo,tChecklist,tEnfen store;
+    class claude aicls;
     class map,panel,geoloc fe;
 ```
 
-**Comunicación:** un único contrato HTTP/JSON entre `frontend` (Next.js) y `backend` (Django DRF). Sin microservicios, sin base de datos en runtime: la API lee artefactos JSON precocidos. El GeoJSON distrital vive como asset del frontend (es geometría, no cambia).
+**Comunicación:** un único contrato HTTP/JSON entre `frontend` (Next.js) y `backend` (Django DRF).
+El backend es la **única fuente de verdad**: toda la información (conteos, geometría, checklists,
+resumen ENFEN) vive en **PostgreSQL (AWS RDS)** y se sirve por la API vía el ORM. El frontend no
+embebe data ni GeoJSON — los pide al backend (Principio VIII). El ETL es un *management command*
+de Django que se corre antes/durante el evento para poblar la BD con datos reales.
 
 ---
 
@@ -62,18 +88,23 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    A["SINPAD CSV<br/>crudo"] -->|"filtrar:<br/>Inundación · Lluvias intensas · Huayco"| B["emergencias<br/>de lluvia"]
-    B -->|"agrupar por ubigeo<br/>(conteo crudo, sin normalizar)"| C["conteo<br/>por distrito"]
-    C -->|"asignar nivel<br/>(3 niveles + gris si N=0)"| D["districts.json"]
-    E["GeoJSON IGN"] -->|"reconciliar ubigeos<br/>(pos-2013)"| F["northcoast.geojson"]
-    D --> G["API Django<br/>/api/districts"]
-    F --> H["Leaflet choropleth"]
-    G --> H
-    H -->|"clic"| I["/api/districts/{ubigeo}<br/>+ /api/enfen"]
-    I --> J["Panel #quot;tu distrito#quot;"]
+    A["SINPAD CSV crudo"] -->|"filtrar:<br/>Inundación · Lluvias · Huayco"| B["emergencias de lluvia"]
+    B -->|"agrupar por ubigeo<br/>(conteo crudo, sin normalizar)"| C["conteo por distrito"]
+    C -->|"asignar nivel<br/>(3 niveles + gris si N=0)"| D[("tabla districts<br/>PostgreSQL/RDS")]
+    E["GeoJSON IGN"] -->|"reconciliar ubigeos (pos-2013)"| F[("geometría<br/>PostgreSQL/RDS")]
+    G["Comunicado ENFEN"] -->|"llamada real a Claude"| H[("enfen_summary<br/>cacheado en RDS")]
+    D --> API["Django DRF<br/>(ORM)"]
+    F --> API
+    H --> API
+    API -->|"GET /api/districts"| MAP["Leaflet choropleth"]
+    MAP -->|"clic"| DET["/api/districts/{ubigeo} + /api/enfen"]
+    DET --> PANEL["Panel tu distrito"]
 ```
 
-> **Regla de oro:** densidad sobre cobertura. El clímax necesita ~10–15 distritos de costa norte coloreados de forma convincente, no los 1.870 nacionales. Plan-B si el CSV falla (timebox 90 min): ~15 distritos anclados al reporte COEN (Piura: 91.835 damnificados; Catacaos ≈ 45 mil).
+> **Regla de oro:** densidad sobre cobertura. El clímax necesita ~10–15 distritos de costa norte
+> coloreados de forma convincente con **datos reales**, no los 1.870 nacionales. Plan-B si el CSV
+> de SINPAD falla (timebox 90 min): ~15 distritos anclados al reporte COEN (Piura: 91.835
+> damnificados; Catacaos ≈ 45 mil) — sigue siendo dato real, cargado en la misma BD.
 
 ---
 
@@ -81,31 +112,41 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-    actor U as Ciudadano
+    actor U as Ciudadano (móvil)
     participant M as Mapa (Leaflet)
     participant API as Django DRF
-    participant P as Panel "tu distrito"
+    participant DB as PostgreSQL (RDS)
+    participant AI as Claude
+    participant P as Panel
 
     U->>M: Carga la app
     M->>API: GET /api/districts
-    API-->>M: [{ubigeo, nombre, conteo, nivel, anios[]}]
-    M-->>U: Choropleth costa norte (gris = sin registro ≠ sin riesgo)
+    API->>DB: SELECT districts (costa norte)
+    DB-->>API: [{ubigeo, nombre, conteo, nivel, anios[]}]
+    API-->>M: lista de distritos
+    M-->>U: Choropleth (gris = sin registro ≠ sin riesgo)
 
     U->>M: Clic en su distrito
     M->>API: GET /api/districts/{ubigeo}
-    API-->>M: histórico + checklist por nivel
+    API->>DB: SELECT detalle + checklist por nivel
+    DB-->>API: histórico + checklist
     M->>API: GET /api/enfen
-    API-->>M: resumen ENFEN (texto precomputado)
+    API->>DB: ¿resumen cacheado?
+    alt cache vacío
+        API->>AI: resume este comunicado ENFEN
+        AI-->>API: resumen (2-3 frases, real)
+        API->>DB: guarda resumen (cache)
+    end
+    API-->>M: resumen ENFEN real
     M->>P: Abrir panel (memoria + presente yuxtapuestos)
-    P-->>U: "Tu distrito se inundó N veces" + estado ENFEN + qué hacer
-    Note over P,U: Termina en memoria + riesgo + acción.<br/>IA = cierre, no héroe. Disclaimer al pie.
+    Note over M,U: Termina en memoria + riesgo + acción.<br/>IA = cierre real, no héroe. Disclaimer al pie.
 ```
 
 ---
 
-## 4. Modelo de datos (artefactos precocidos)
+## 4. Modelo de datos (PostgreSQL / Django ORM)
 
-No hay base de datos en runtime para el MVP. Estos son los esquemas de los JSON que sirve la API.
+Modelos ORM persistidos en PostgreSQL (AWS RDS). El ETL los puebla; la API los sirve.
 
 ```mermaid
 classDiagram
@@ -114,47 +155,45 @@ classDiagram
         +string nombre
         +string departamento
         +int conteo
-        +string nivel  // "alto" | "medio" | "bajo" | "sin_registro"
-        +int[] anios
-    }
-    class DistrictDetail {
-        +string ubigeo
-        +string nombre
-        +int conteo
-        +Emergencia[] historico
         +string nivel
-        +ChecklistItem[] checklist
+        +int[] anios
+        +json geom
     }
     class Emergencia {
         +int anio
         +string fenomeno
-        +string fuente  // "SINPAD" | "COEN"
+        +string fuente
+        +District district
     }
     class ChecklistItem {
         +string nivel
         +string accion
-        +string fuente  // "INDECI"
+        +string fuente
     }
     class EnfenSummary {
-        +string estado     // alerta vigente
-        +string resumen    // 2-3 frases, texto precomputado
+        +string estado
+        +string resumen
         +string fecha
         +string fuente_url
     }
-    District "1" --> "1" DistrictDetail : /api/districts/{ubigeo}
-    DistrictDetail "1" --> "*" Emergencia
-    DistrictDetail "1" --> "*" ChecklistItem
+    District "1" --> "*" Emergencia : histórico
+    District "1" --> "*" ChecklistItem : checklist según nivel
 ```
 
 ### Endpoints (Django DRF — sobre el starter de `backend/api/`)
 
-| Método | Ruta | Devuelve |
-|---|---|---|
-| `GET` | `/api/districts` | Lista costa norte `{ubigeo, nombre, conteo, nivel, anios[]}` para el choropleth |
-| `GET` | `/api/districts/<ubigeo>` | Detalle: histórico + resumen ENFEN (texto) + checklist por nivel |
-| `GET` | `/api/enfen` | Estado/comunicado ENFEN resumido (precargado) |
-| `GET` | `/health` | Liveness probe *(del starter)* |
-| `GET` | `/api/items` | Mock del starter — **se reemplaza** |
+| Método | Ruta | Devuelve | Fuente |
+|---|---|---|---|
+| `GET` | `/api/districts` | Lista costa norte `{ubigeo, nombre, conteo, nivel, anios[]}` para el choropleth | BD |
+| `GET` | `/api/districts/<ubigeo>` | Detalle: histórico + checklist por nivel (+ geometría si aplica) | BD |
+| `GET` | `/api/enfen` | Resumen ENFEN real (Claude), cacheado en BD | BD + Claude |
+| `GET` | `/health` | Liveness probe *(del starter)* | — |
+| `GET` | `/api/items` | Mock del starter — **se reemplaza** | — |
+
+> **Decisión:** geometría como **GeoJSON en un `JSONField`** de Postgres (sin PostGIS). El backend
+> es la única fuente de verdad y sirve los polígonos por la API; el mapa los pinta y la geoloc (P4)
+> resuelve el point-in-polygon en el front con **Turf.js** (`booleanPointInPolygon`) sobre esos mismos
+> polígonos. PostGIS + geoloc server-side queda como upgrade de roadmap.
 
 ---
 
@@ -163,28 +202,51 @@ classDiagram
 ```mermaid
 flowchart LR
     subgraph vercel["Vercel"]
-        fe["Next.js 14<br/>frontend/<br/>+ northcoast.geojson"]
+        fe["Next.js 14<br/>frontend/"]
     end
-    subgraph railway["Railway"]
-        be["Django + DRF<br/>backend/<br/>(gunicorn)"]
+    subgraph aws["AWS"]
+        ec2["EC2 + Elastic IP (estática)<br/>Django + DRF · gunicorn config.wsgi"]
+        rds[("RDS PostgreSQL")]
+        ec2 -->|"DATABASE_URL (psycopg)"| rds
     end
-    dev(["💻 Local<br/>:3000 ↔ :8000"])
-    fe -->|"HTTPS · NEXT_PUBLIC_API_BASE_URL"| be
-    dev -.->|"git push"| gh["GitHub repo<br/>(release Hito 1)"]
-    gh -.->|"deploy"| vercel
-    gh -.->|"deploy"| railway
+    anthropic["Claude API<br/>(Anthropic)"]
+    dev(["💻 Local<br/>:3000 ↔ :8000 ↔ Postgres"])
+
+    fe -->|"HTTPS · NEXT_PUBLIC_API_BASE_URL → Elastic IP"| ec2
+    ec2 -.->|"ANTHROPIC_API_KEY"| anthropic
+    dev -.->|"git push → deploy"| vercel
+    dev -.->|"deploy (EC2)"| ec2
 ```
 
-- **Frontend:** Vercel (URL pública automática). Var `NEXT_PUBLIC_API_BASE_URL` → backend desplegado.
-- **Backend:** Railway (`gunicorn config.wsgi`, ver `backend/Procfile` / `backend/railway.toml`). Setear `CORS_ORIGINS`, `ALLOWED_HOSTS`, `SECRET_KEY`, `DEBUG=False`.
-- **Datos:** los JSON precocidos se versionan en el repo (sin red en vivo en la demo).
+- **Frontend:** Vercel (URL pública automática). Var `NEXT_PUBLIC_API_BASE_URL` → Elastic IP del EC2.
+- **Backend:** **EC2 con Elastic IP (estática)** dentro de AWS, junto a RDS. `gunicorn config.wsgi`
+  detrás de Nginx, setear `ALLOWED_HOSTS` (Elastic IP/dominio), `CORS_ORIGINS`, `SECRET_KEY`, `DEBUG=False`.
+- **Base de datos:** **PostgreSQL en AWS RDS**. El ETL corre como management command para poblarla.
+- **IA:** `ANTHROPIC_API_KEY` en el backend; la llamada a Claude vive en el servidor, nunca en el front.
+- **Plan-B de infra:** si RDS se complica en tiempo, la misma app corre contra Postgres local
+  (o SQLite) sin cambiar código — solo la cadena de conexión (Principio VIII: capas limpias).
+
+---
+
+## 6. Alcance y orden de degradación (si el tiempo aprieta)
+
+Decisión de equipo: **real pero con plan de recorte** — BD real + IA real, y si el tiempo aprieta se
+recorta por prioridad, **nunca** se mete data fake.
+
+- **In-scope hoy (las 4 historias):** P1 mapa de memoria (clímax) · P2 acción (nivel + checklist
+  INDECI) · P3 resumen ENFEN real (Claude) · P4 geoloc (botón 2º, Turf.js en el front).
+- **Orden de recorte si falta tiempo:** primero **P4 geoloc**; luego degradar **P3** a un resumen
+  ENFEN ya generado/cacheado (sigue siendo salida real del modelo, no fake). **P1 y P2 son intocables**
+  — son la pantalla. El clímax (clic en distrito) nunca se recorta.
 
 ---
 
 ## Decisiones de diseño que la arquitectura respeta
 
-- **Agencia, no amenaza:** toda respuesta termina en *memoria + nivel de riesgo + acción*; nunca un diagnóstico binario.
-- **IA = una sola llamada, y para la demo es texto precomputado** (coherente con "nada en vivo"). Llamada real al modelo = roadmap.
+- **Integración real, datos reales (Ppio. II):** BD PostgreSQL/RDS + llamada real a Claude; nada hardcodeado ni fake en la demo.
+- **Escalabilidad y mantenibilidad (Ppio. VIII):** toda la info vive en el backend/BD, no en el front; capas limpias (modelos · serializers · vistas); un MVP que escala a Nacional sin reescribir.
+- **Agencia, no amenaza (Ppio. I):** toda respuesta termina en *memoria + nivel + acción*; nunca diagnóstico binario.
 - **Sin fórmula combinada de riesgo:** memoria histórica y estado ENFEN se muestran **yuxtapuestos**.
 - **Sin verde engañoso:** distritos sin registro van en **gris explícito** ("no significa sin riesgo").
 - **Susceptibilidad ≠ registro:** mostramos lo que ocurrió, no predicción.
+- **Mobile-first (Ppio. VII):** la app se consume en celular; responsive desde el inicio.

@@ -59,7 +59,7 @@ Clic en *tu* distrito → mapa de memoria real. **La IA es el cierre, no el hér
 2. **Panel "tu distrito"** (clic / dropdown): histórico (N emergencias, qué años) +
    riesgo histórico **y** estado ENFEN actual yuxtapuestos (sin fórmula) +
    checklist curado de INDECI por nivel.
-3. **IA = una llamada:** resume el comunicado ENFEN **precargado** a lenguaje claro. Sin red en vivo.
+3. **IA = una llamada real:** resume el comunicado ENFEN a lenguaje claro con una **llamada real a Claude**, cacheada en la BD. Sin fuentes externas en vivo en el clímax.
 4. **Geoloc como botón secundario** con manejo de "fuera de zona". El clímax SIEMPRE por clic.
 5. **Disclaimer de pie:** "información de referencia, no reemplaza a las autoridades oficiales (INDECI/ENFEN)."
 
@@ -80,8 +80,8 @@ Clic en *tu* distrito → mapa de memoria real. **La IA es el cierre, no el hér
 | **ENFEN** (enfen.imarpe.gob.pe) | Anticipación | Estado de alerta + comunicado (precargado) | Nacional/costero |
 | **GeoJSON distrital** (IGN/INEI) | Geometría | Polígonos de distrito por ubigeo | Distrito |
 
-- **Artefacto precocido:** el output de Datos es un **JSON estático** `{ ubigeo, nombre, conteo, nivel }`
-  para costa norte + GeoJSON filtrado con ubigeos reconciliados. El front consume eso **vía el backend DRF**; sin fuentes externas en vivo.
+- **Ingesta precocida (ETL):** un management command de Datos **puebla la BD** con `{ ubigeo, nombre, conteo, nivel, anios[] }`
+  para costa norte + GeoJSON reconciliado (en `JSONField`). El front consume eso **vía la API DRF desde la BD**; sin fuentes externas en vivo.
 - **Filtro de fenómeno:** solo lluvia → `Inundación`, `Lluvias intensas`, `Huayco / Movimiento en masa`.
   Verificar los strings exactos al bajar el CSV.
 - **Susceptibilidad ≠ registro.** Mostramos registro (se inundó), no predicción (es propenso).
@@ -89,9 +89,9 @@ Clic en *tu* distrito → mapa de memoria real. **La IA es el cierre, no el hér
 ## Stack (real, según el repo)
 
 - **Frontend:** Next.js 14 (App Router) + React 18 + TypeScript + **Leaflet** (a agregar). En `frontend/`.
-- **Backend:** **Django + Django REST Framework** sirviendo JSON estático precocido. En `backend/`.
-- **Datos:** JSON estático precocido (no Postgres/PostGIS en 6h). El backend expone los endpoints; el GeoJSON distrital puede vivir en el front como asset.
-- **IA:** para la demo, el resumen del ENFEN es **texto precomputado/estático** (coherente con "sin fuentes externas en vivo"); igual se **sirve por el endpoint DRF**, no hardcodeado en el front. Llamada real al modelo = roadmap.
+- **Backend:** **Django + Django REST Framework** sobre **PostgreSQL (AWS RDS)**, desplegado en **EC2 con Elastic IP**. En `backend/`.
+- **Datos:** **PostgreSQL en AWS RDS** (fuente única de verdad; toda la info en backend, incl. geometría como GeoJSON en `JSONField`, **sin** PostGIS). El ETL puebla la BD; la API la sirve. El front no embebe data.
+- **IA:** **llamada real a Claude (Anthropic)** para resumir el comunicado ENFEN a 2-3 frases; la respuesta real se **cachea en la BD**. La llamada vive en el backend (`ANTHROPIC_API_KEY`), nunca en el front. Nada de texto fake.
 
 Monolito pragmático: `frontend` (Next.js) ↔ `backend` (Django DRF). Sin microservicios.
 

@@ -1,19 +1,24 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.1.0
-- Bump rationale: MINOR — added Principle VII (Mobile-first y fluido);
-  revised Principle II (de "nada en vivo" a "integración real, datos precocidos").
-- Principles defined: I. Agencia, no amenaza · II. Integración real, datos precocidos ·
+- Version change: 1.1.0 → 2.0.0
+- Bump rationale: MAJOR — redefinición del NON-NEGOTIABLE II (de "datos precocidos / IA
+  precomputada" a "datos reales en BD PostgreSQL/RDS + llamada real al modelo"); añadido
+  Principle VIII (Escalabilidad y mantenibilidad); ajustada restricción de IA y flujo paralelo.
+  Motivado por iteración de arquitectura con el equipo (la arquitectura previa se generó con
+  CONTEXT.md desactualizado).
+- Principles defined: I. Agencia, no amenaza · II. Integración real, datos reales ·
   III. Densidad sobre cobertura (una fuente real) · IV. Traducir, no pedir ·
   V. Registro ≠ predicción · VI. Contratos de datos estables para paralelizar ·
-  VII. Mobile-first y fluido
+  VII. Mobile-first y fluido · VIII. Escalabilidad y mantenibilidad
 - Added sections: Restricciones del Hackathon (timeboxing) · Flujo de trabajo paralelo
 - Removed sections: none
-- Templates reviewed:
-  ✅ plan-template.md (Constitution Check alineado con principios I–VI)
-  ✅ spec-template.md (sin secciones obligatorias en conflicto)
-  ✅ tasks-template.md (categorización [P] compatible con Principio VI)
-- Deferred TODOs: none
+- Artefactos a re-sincronizar con esta versión (PENDIENTE):
+  ⚠ docs/architecture.md (quitar "sin BD en runtime"/"nada en vivo" → BD real RDS + IA real)
+  ⚠ docs/hito-1.md (resumen 1-párrafo dice "sin base de datos en runtime" / "nada en vivo")
+  ⚠ specs/001-vigia-costa-norte/plan.md (Technical Context: añadir Postgres/RDS, IA real)
+  ⚠ specs/001-vigia-costa-norte/spec.md (FR-009/SC-004: integración real, no "sin red")
+  ⚠ CONTEXT.md (Stack: "JSON estático precocido (no Postgres)" → Postgres/RDS)
+- Deferred TODOs: definir modelo de IA exacto; estrategia de geometría (PostGIS vs JSONField)
 -->
 
 # Vigía Constitution
@@ -33,16 +38,17 @@ Se conserva la especificidad personal ("tu distrito se inundó 3 veces"). Tono a
 nunca alarmista. **Rationale:** el jurado peruano vivió el Niño Costero 2017; el framing
 emocional pesa tanto como lo técnico.
 
-### II. Integración real, datos precocidos (NON-NEGOTIABLE)
-La demo es **interactiva y con integración real end-to-end**: el frontend llama al backend
-Django DRF, y el backend sirve los datos. Lo que está precocido es el **dato**, no la
-arquitectura: el backend expone JSON precocido (conteos SINPAD, resumen ENFEN como texto,
-checklists) en vez de consultar fuentes externas en vivo. Durante la demo NO se hacen llamadas
-a fuentes externas (SINPAD/ENFEN live) ni al modelo de IA — esos datos ya están materializados
-en el backend. La optimización (caché, fallback a asset estático si el backend cae) se decide
-durante el desarrollo o al final, no se asume desde el inicio.
-**Rationale:** una integración real se ve y se demuestra mejor que valores hardcodeados; el
-riesgo a evitar es la dependencia de fuentes **externas** en vivo, no la de nuestro propio backend.
+### II. Integración real, datos reales (NON-NEGOTIABLE)
+La demo es **interactiva y con integración real end-to-end** con **datos reales**, nunca
+hardcodeados ni fake. El frontend llama al backend Django DRF; el backend consulta una **base
+de datos real (PostgreSQL en AWS RDS)** donde se cargó la data de las fuentes oficiales (SINPAD,
+ENFEN, GeoJSON IGN/INEI) mediante un ETL. La IA hace una **llamada real al modelo** para resumir
+el comunicado ENFEN — la demo NO se permite usar texto fake. Lo "precocido" es el momento de la
+**ingesta** (el ETL corre antes del evento para cargar la BD), no el dato mostrado: lo que el
+usuario ve sale de la BD vía la API, en vivo. Cachear una respuesta **real** del modelo es válido
+(sigue siendo dato real); inventar texto no lo es.
+**Rationale:** es un torneo de IA y la arquitectura vale 40%; una integración real con BD y modelo
+real se demuestra y se defiende ante el jurado mucho mejor que valores estáticos.
 
 ### III. Densidad sobre cobertura — una fuente real
 Una sola fuente real bien hecha (SINPAD verídico) le gana a cinco mockeadas. El clímax
@@ -73,6 +79,15 @@ y fluidos en pantalla de teléfono; el clímax (clic/tap en el distrito) MUST fu
 tacto, con targets táctiles cómodos (≥44px). **Rationale:** el usuario real y la demo ocurren
 en el teléfono; un layout pensado para desktop se rompe en el momento que importa.
 
+### VIII. Escalabilidad y mantenibilidad (NON-NEGOTIABLE)
+Aunque sea un MVP, la arquitectura MUST diseñarse para escalar y mantenerse. **Toda la
+información vive en la BD del backend** (PostgreSQL/RDS), no embebida en el frontend: cargar
+data o GeoJSON en el front lo vuelve pesado, no cacheable y no escalable. El backend es la única
+fuente de verdad y expone la data por la API. Separación limpia de capas (modelos ORM · serializers
+· vistas), sin lógica de negocio en el frontend, sin datos hardcodeados. **Rationale:** el rubro
+de Ingeniería vale 40% y el jurado puede preguntar por cualquier decisión; un MVP bien estructurado
+escala a Nacional (roadmap) sin reescribir.
+
 ## Restricciones del Hackathon (timeboxing)
 
 - **Presupuesto:** ~3 horas de build, 3 ingenieros. Torneo de Vibecoding 2026 (GDG × DSCPUCP).
@@ -80,8 +95,8 @@ en el teléfono; un layout pensado para desktop se rompe en el momento que impor
   acción (panel). Cualquier feature que no sirva a esa pantalla es roadmap.
 - **Espina de datos timeboxed a 90 min:** si la extracción SINPAD + match GeoJSON no sale,
   se activa plan-B (~15 distritos anclados al reporte COEN) sin bloquear los otros carriles.
-- **IA = una sola llamada conceptual:** resume el comunicado ENFEN precargado a 2–3 frases.
-  En la demo es texto precomputado. La llamada real al modelo es roadmap.
+- **IA = llamada real al modelo:** resume el comunicado ENFEN a 2–3 frases con una llamada real.
+  Se permite cachear la respuesta real para estabilidad; no se permite texto fake.
 - **Disclaimer de pie obligatorio:** "información de referencia, no reemplaza a las
   autoridades oficiales (INDECI/ENFEN)".
 
@@ -91,8 +106,9 @@ en el teléfono; un layout pensado para desktop se rompe en el momento que impor
 - El **contrato JSON** (Principio VI) se congela primero; todo lo demás se construye contra él.
 - Cada carril entrega un artefacto consumible por los otros (JSON, componente, texto) sin
   necesitar el código interno del otro carril.
-- Integración continua al endpoint DRF / asset estático; el front nunca espera al backend real
-  (usa dummy hasta que el real esté listo, mismo shape).
+- Integración continua contra el endpoint DRF; el front nunca espera al backend real durante el
+  desarrollo (usa un dummy en memoria con el mismo shape del contrato, **solo en dev**). El dummy
+  NUNCA llega a la demo: para entonces la data real ya vive en la BD.
 
 ## Governance
 
@@ -103,4 +119,4 @@ debe quedar registrado. Ante duda de alcance: ganar la pantalla del clímax prim
 demás es roadmap. Versionado semántico: MAJOR para cambios incompatibles de principios,
 MINOR para principios/secciones nuevas, PATCH para aclaraciones.
 
-**Version**: 1.1.0 | **Ratified**: 2026-06-26 | **Last Amended**: 2026-06-26
+**Version**: 2.0.0 | **Ratified**: 2026-06-26 | **Last Amended**: 2026-06-26
