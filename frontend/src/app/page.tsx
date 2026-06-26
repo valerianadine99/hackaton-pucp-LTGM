@@ -146,6 +146,7 @@ export default function Home() {
   )
   const selectedDistrict = selected ? districts[selected.ubigeo] ?? null : null
   const segLabel = enfenSegLabel(enfen?.estado)
+  const hasData = options.length > 0
 
   function pick(s: Sel) {
     setSelected(s)
@@ -238,7 +239,7 @@ export default function Home() {
                 </button>
               </div>
               <div className="relative mx-4 mt-1 min-h-[340px] flex-1 overflow-hidden rounded-t-[18px] border border-b-0 border-[#d8e0e4] bg-[#dfe6ea]">
-                {!isDesktop && (
+                {!isDesktop && hasData && (
                   <MapView
                     districts={districts}
                     selected={null}
@@ -321,7 +322,7 @@ export default function Home() {
         </BrandHeader>
         <div className="flex min-h-0 flex-1">
           <div className="relative min-h-0 flex-1">
-            {isDesktop && (
+            {isDesktop && hasData && (
               <MapView
                 districts={districts}
                 selected={selected?.ubigeo ?? null}
