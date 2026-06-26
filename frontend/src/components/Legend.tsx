@@ -4,21 +4,23 @@ const ORDER: Nivel[] = ['alto', 'medio', 'bajo', 'sin_registro']
 
 export function Legend() {
   return (
-    <div className="rounded-lg border bg-card/90 p-3 text-xs shadow-sm backdrop-blur">
-      <p className="mb-2 font-medium">Emergencias por lluvia/inundación (2003–2020)</p>
-      <ul className="space-y-1">
+    <div className="rounded-xl border border-border bg-card/90 p-3 shadow-sm backdrop-blur">
+      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+        Emergencias por lluvia · 2003–2020
+      </p>
+      <ul className="mt-2 space-y-1">
         {ORDER.map((n) => (
-          <li key={n} className="flex items-center gap-2">
+          <li key={n} className="flex items-center gap-2 text-xs">
             <span
-              className="inline-block h-3 w-3 rounded-sm"
+              className="inline-block h-3 w-3 rounded-[3px]"
               style={{ backgroundColor: LEVEL_COLOR[n] }}
             />
-            <span className="text-muted-foreground">{LEVEL_LABEL[n]}</span>
+            <span className="text-foreground/80">{LEVEL_LABEL[n]}</span>
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-[11px] leading-tight text-muted-foreground">
-        Conteo crudo de emergencias (SINPAD), sin normalizar por población.
+      <p className="mt-2 max-w-[12rem] text-[10px] leading-tight text-muted-foreground">
+        Conteo crudo (SINPAD), sin normalizar por población.
       </p>
     </div>
   )

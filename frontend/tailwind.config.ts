@@ -14,7 +14,18 @@ const config: Config = {
       screens: { '2xl': '1400px' },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Georgia', 'serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+      },
       colors: {
+        // Identidad Vigía: teal "marea" (frío, vigilante) + rampa cálida (memoria del agua).
+        ink: '#07302E',
+        canvas: '#F6F5F1',
+        ember: '#EA7B27',
+        oxblood: '#A01C1C',
+        sand: '#BBB3A6',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

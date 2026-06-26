@@ -25,9 +25,9 @@ export default function MapView({ districts, selected, onSelect }: Props) {
     const color = d ? LEVEL_COLOR[d.nivel] : LEVEL_COLOR.sin_registro
     return {
       fillColor: color,
-      fillOpacity: 0.85,
-      color: isSelected ? '#0f172a' : '#ffffff',
-      weight: isSelected ? 3 : 1,
+      fillOpacity: isSelected ? 0.95 : 0.88,
+      color: isSelected ? '#07302E' : '#F6F5F1',
+      weight: isSelected ? 3 : 0.8,
     }
   }
 
@@ -91,5 +91,5 @@ export default function MapView({ districts, selected, onSelect }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
 
-  return <div ref={containerRef} className="h-full w-full bg-slate-100" />
+  return <div ref={containerRef} className="h-full w-full bg-[#ECEAE3]" />
 }

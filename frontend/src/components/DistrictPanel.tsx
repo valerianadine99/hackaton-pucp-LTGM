@@ -1,4 +1,5 @@
 import { Badge } from '@/components/ui/badge'
+import { MemoryRibbon } from '@/components/MemoryRibbon'
 import {
   ENFEN_SUMMARY,
   LEVEL_LABEL,
@@ -15,6 +16,14 @@ interface Props {
   enfen: EnfenSummary | null
 }
 
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+      {children}
+    </p>
+  )
+}
+
 function nivelBadgeVariant(nivel: string) {
   if (nivel === 'alto') return 'destructive' as const
   if (nivel === 'sin_registro') return 'secondary' as const
@@ -24,11 +33,14 @@ function nivelBadgeVariant(nivel: string) {
 export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: Props) {
   if (!ubigeo) {
     return (
-      <div className="flex min-h-[40vh] flex-col items-center justify-center p-8 text-center text-muted-foreground md:h-full md:min-h-0">
-        <p className="text-lg font-medium text-foreground">Empieza por tu distrito</p>
-        <p className="mt-2 max-w-xs text-sm">
-          Toca tu distrito en el mapa (o búscalo en la lista) para ver qué le ha pasado antes,
-          qué viene y qué hacer hoy.
+      <div className="flex h-full min-h-[40vh] flex-col items-center justify-center p-8 text-center">
+        <span aria-hidden className="text-3xl">📍</span>
+        <p className="mt-3 font-display text-xl font-semibold text-foreground">
+          Empieza por tu distrito
+        </p>
+        <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+          Toca tu distrito en el mapa, o búscalo arriba, para ver qué le ha pasado antes, qué viene
+          y qué hacer hoy.
         </p>
       </div>
     )
@@ -40,75 +52,83 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
   const enfenData = enfen ?? ENFEN_SUMMARY
 
   return (
-    <div className="flex min-h-[40vh] flex-col gap-4 overflow-y-auto p-5 md:h-full md:min-h-0">
+    <div className="flex flex-col gap-5 p-5">
       <header>
         <div className="flex items-start justify-between gap-2">
-          <h2 className="text-xl font-semibold leading-tight">{titulo}</h2>
-          <Badge variant={nivelBadgeVariant(nivel)} className="shrink-0">
+          <h2 className="font-display text-2xl font-semibold leading-tight">{titulo}</h2>
+          <Badge variant={nivelBadgeVariant(nivel)} className="mt-1 shrink-0">
             {LEVEL_LABEL[nivel]}
           </Badge>
         </div>
-        {district && <p className="text-sm text-muted-foreground">{district.departamento}</p>}
+        {district && (
+          <p className="font-mono text-xs text-muted-foreground">
+            {district.departamento} · ubigeo {district.ubigeo}
+          </p>
+        )}
       </header>
 
-      {/* MEMORIA */}
-      <section className="rounded-lg border bg-card p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Memoria</p>
+      {/* MEMORIA — número grande + cinta de memoria (signature) */}
+      <section>
+        <Eyebrow>Memoria</Eyebrow>
         {district ? (
           <>
-            <p className="mt-1 text-2xl font-bold">
-              {district.conteo}{' '}
-              <span className="text-base font-normal text-muted-foreground">
+            <p className="mt-1 flex items-baseline gap-2">
+              <span className="font-display text-5xl font-semibold leading-none text-oxblood">
+                {district.conteo}
+              </span>
+              <span className="text-sm text-muted-foreground">
                 emergencias por lluvia
               </span>
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              entre {district.anios[0]} y {district.anios[district.anios.length - 1]} ·{' '}
-              {district.anios.length} año(s) con eventos
+              {district.anios.length} año(s) con eventos, entre {district.anios[0]} y{' '}
+              {district.anios[district.anios.length - 1]}.
             </p>
+            <div className="mt-3">
+              <MemoryRibbon anios={district.anios} />
+            </div>
           </>
         ) : (
           <p className="mt-1 text-sm">
-            Sin emergencias registradas en SINPAD. <strong>No significa sin riesgo</strong> — la
-            prevención sigue aplicando.
+            Sin emergencias registradas en SINPAD.{' '}
+            <strong className="text-foreground">No significa sin riesgo</strong> — la prevención
+            sigue aplicando.
           </p>
         )}
       </section>
 
-      {/* PRESENTE (ENFEN) — yuxtapuesto, sin fórmula combinada */}
-      <section className="rounded-lg border bg-card p-4">
+      {/* AHORA — estado ENFEN, yuxtapuesto (sin fórmula combinada) */}
+      <section className="rounded-xl border border-border bg-secondary/50 p-4">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Estado actual
-          </p>
+          <Eyebrow>Ahora</Eyebrow>
           <Badge variant="destructive" className="shrink-0">
             {enfenData.estado}
           </Badge>
         </div>
-        <p className="mt-2 text-sm">{enfenData.resumen}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {enfenData.fecha}
-          {enfenData.nota ? ` · ${enfenData.nota}` : ''}
-        </p>
+        <p className="mt-2 text-sm leading-relaxed">{enfenData.resumen}</p>
+        <p className="mt-2 font-mono text-[11px] text-muted-foreground">{enfenData.fecha}</p>
       </section>
 
-      {/* ACCIÓN */}
-      <section className="rounded-lg border bg-card p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Qué hacer
-        </p>
-        <ul className="mt-2 space-y-2 text-sm">
+      {/* QUÉ HACER — checklist curado INDECI */}
+      <section>
+        <Eyebrow>Qué hacer</Eyebrow>
+        <ul className="mt-2 space-y-2.5 text-sm">
           {checklist.map((item, i) => (
-            <li key={i} className="flex gap-2">
-              <span aria-hidden className="mt-0.5 text-primary">
+            <li key={i} className="flex gap-2.5">
+              <span
+                aria-hidden
+                className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-ink text-[10px] font-bold text-canvas"
+              >
                 ✓
               </span>
-              <span>{item}</span>
+              <span className="leading-snug">{item}</span>
             </li>
           ))}
         </ul>
         {checklists && (
-          <p className="mt-3 text-[11px] text-muted-foreground">{checklists.disclaimer}</p>
+          <p className="mt-3 text-[11px] leading-tight text-muted-foreground">
+            {checklists.disclaimer}
+          </p>
         )}
       </section>
     </div>
