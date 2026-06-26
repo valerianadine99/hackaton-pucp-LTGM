@@ -1,12 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import {
-  ENFEN_SUMMARY,
-  type Checklists,
-  type District,
-  type EnfenSummary,
-} from '@/lib/vigia'
+import { type Checklists, type District, type EnfenSummary } from '@/lib/vigia'
 
 interface Props {
   ubigeo: string | null
@@ -103,7 +98,7 @@ export function DistrictPanel({
     )
   }
 
-  const enfenData = enfen ?? ENFEN_SUMMARY
+  const enfenData = enfen ?? { estado: '', resumen: '', fecha: '', fuente_url: '' }
   const idx = enfenIndex(enfenData.estado)
   const seg = SEGMENTS[idx]
   const titulo = district?.nombre ?? nombre ?? 'Distrito'
@@ -193,7 +188,10 @@ export function DistrictPanel({
             <p className="text-xl font-black leading-tight" style={{ color: seg.color }}>
               {STATE_TITLE[idx]}
             </p>
-            <p className="mt-2 text-[13.5px] leading-relaxed text-[#384450]">{enfenData.resumen}</p>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-[#384450]">
+              {enfenData.resumen ||
+                'Resumen por IA pendiente: se genera al procesar el comunicado oficial con la API key de Claude.'}
+            </p>
             <div className="mt-4 flex gap-1.5">
               {SEGMENTS.map((s, i) => (
                 <div key={s.label} className="flex-1 text-center">

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { Legend } from '@/components/Legend'
 import { DistrictPanel, enfenSegLabel } from '@/components/DistrictPanel'
 import type { Checklists, District, EnfenSummary } from '@/lib/vigia'
-import { loadDistricts } from '@/lib/vigia-api'
+import { loadChecklists, loadDistricts, loadEnfen, loadGeojson } from '@/lib/vigia-api'
 
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -122,26 +122,17 @@ export default function Home() {
   const [locating, setLocating] = useState(false)
 
   useEffect(() => {
-    // Distritos desde la API en vivo (BD vía backend). Checklists y ENFEN siguen en
-    // estático por ahora (no hay endpoint de checklists y el resumen ENFEN requiere la
-    // API key de Claude); se conectan en la siguiente fase.
-    // Estático PRIMERO: la demo siempre tiene datos al instante (Vercel sin backend).
-    fetch('/data/districts.json')
-      .then((r) => r.json())
-      .then((rows: District[]) =>
-        setDistricts((prev) =>
-          Object.keys(prev).length ? prev : Object.fromEntries(rows.map((d) => [d.ubigeo, d]))
-        )
-      )
-      .catch(() => {})
-    // Si la API en vivo responde (dev/backend desplegado), la prefiere.
+    // Todo desde la API en vivo (BD vía backend) — sin fallback estático (Principio VIII).
+    // Requiere el backend accesible vía NEXT_PUBLIC_API_BASE_URL.
     loadDistricts()
-      .then((d) => {
-        if (Object.keys(d).length) setDistricts(d)
-      })
-      .catch(() => {})
-    fetch('/data/checklists.json').then((r) => r.json()).then(setChecklists)
-    fetch('/data/enfen.json').then((r) => r.json()).then(setEnfen)
+      .then(setDistricts)
+      .catch((e) => console.error('No se pudo cargar distritos:', e))
+    loadChecklists()
+      .then(setChecklists)
+      .catch((e) => console.error('No se pudo cargar checklists:', e))
+    loadEnfen()
+      .then(setEnfen)
+      .catch((e) => console.error('No se pudo cargar ENFEN:', e))
   }, [])
 
   useEffect(() => {
@@ -172,7 +163,7 @@ export default function Home() {
       async (pos) => {
         try {
           const { latitude: lat, longitude: lng } = pos.coords
-          const gj = await fetch('/data/northcoast.geojson').then((r) => r.json())
+          const gj: any = await loadGeojson()
           const f = gj.features.find((ft: any) => pointInFeature(lng, lat, ft.geometry))
           if (f) {
             const u = f.properties.ubigeo
