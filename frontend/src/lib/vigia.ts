@@ -11,11 +11,17 @@ export interface District {
   anios: number[]
 }
 
+export interface ChecklistItem {
+  emoji: string
+  titulo: string
+  detalle: string
+}
+
 export interface Checklists {
   fuente: string
   fuente_url: string
   disclaimer: string
-  niveles: Record<string, string[]>
+  niveles: Record<string, ChecklistItem[]>
 }
 
 // Escala de "memoria" del Niño: a más golpes, más intenso. Nunca verde (decisión #10).

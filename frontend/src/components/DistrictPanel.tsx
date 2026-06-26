@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { MemoryRibbon } from '@/components/MemoryRibbon'
 import {
@@ -30,7 +33,21 @@ function nivelBadgeVariant(nivel: string) {
   return 'outline' as const
 }
 
+// Racha más larga de años consecutivos con emergencia.
+function longestStreak(anios: number[]) {
+  const s = [...anios].sort((a, b) => a - b)
+  let best = s.length ? 1 : 0
+  let cur = 1
+  for (let i = 1; i < s.length; i++) {
+    cur = s[i] === s[i - 1] + 1 ? cur + 1 : 1
+    if (cur > best) best = cur
+  }
+  return best
+}
+
 export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: Props) {
+  const [shared, setShared] = useState(false)
+
   if (!ubigeo) {
     return (
       <div className="flex h-full min-h-[40vh] flex-col items-center justify-center p-8 text-center">
@@ -50,46 +67,70 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
   const checklist = checklists?.niveles[nivel] ?? []
   const titulo = district?.nombre ?? nombre ?? 'Distrito'
   const enfenData = enfen ?? ENFEN_SUMMARY
+  const streak = district ? longestStreak(district.anios) : 0
+  const tuvo2017 = district?.anios.includes(2017)
+
+  async function share() {
+    const text = district
+      ? `Mi distrito ${district.nombre} tuvo emergencias por lluvia en ${district.anios.length} años. Hay Alerta de El Niño Costero — preparémonos.`
+      : 'Vigía — preparémonos ante El Niño Costero.'
+    const url = typeof window !== 'undefined' ? window.location.href : ''
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({ title: 'Vigía', text, url })
+      } catch {
+        /* cancelado */
+      }
+    } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(`${text} ${url}`.trim())
+      setShared(true)
+      setTimeout(() => setShared(false), 2500)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-5 p-5">
       <header>
-        <div className="flex items-start justify-between gap-2">
-          <h2 className="font-display text-2xl font-semibold leading-tight">{titulo}</h2>
+        <Eyebrow>Tu distrito</Eyebrow>
+        <div className="mt-0.5 flex items-start justify-between gap-2">
+          <h2 className="font-display text-3xl font-semibold leading-none">{titulo}</h2>
           <Badge variant={nivelBadgeVariant(nivel)} className="mt-1 shrink-0">
             {LEVEL_LABEL[nivel]}
           </Badge>
         </div>
         {district && (
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="mt-1 font-mono text-xs text-muted-foreground">
             {district.departamento} · ubigeo {district.ubigeo}
           </p>
         )}
       </header>
 
-      {/* MEMORIA — número grande + cinta de memoria (signature) */}
+      {/* MEMORIA — frase humana + puntos por año */}
       <section>
         <Eyebrow>Memoria</Eyebrow>
         {district ? (
           <>
-            <p className="mt-1 flex items-baseline gap-2">
-              <span className="font-display text-5xl font-semibold leading-none text-oxblood">
-                {district.conteo}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                emergencias por lluvia
-              </span>
+            <p className="mt-2 text-lg font-semibold leading-snug">
+              Tu distrito tuvo emergencias por lluvia en{' '}
+              <span className="text-oxblood">{district.anios.length} años</span> entre{' '}
+              {district.anios[0]} y {district.anios[district.anios.length - 1]}.
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {district.anios.length} año(s) con eventos, entre {district.anios[0]} y{' '}
-              {district.anios[district.anios.length - 1]}.
-            </p>
-            <div className="mt-3">
+            <div className="mt-4">
               <MemoryRibbon anios={district.anios} />
             </div>
+            <p className="mt-3 text-sm leading-snug text-muted-foreground">
+              {tuvo2017 && (
+                <>
+                  El <strong className="text-foreground">2017</strong>, el del Niño Costero, fue el
+                  golpe más fuerte.{' '}
+                </>
+              )}
+              {streak >= 3 && <>Hasta {streak} años seguidos con emergencias. </>}
+              Casi siempre por lluvias intensas e inundaciones.
+            </p>
           </>
         ) : (
-          <p className="mt-1 text-sm">
+          <p className="mt-2 text-base leading-snug">
             Sin emergencias registradas en SINPAD.{' '}
             <strong className="text-foreground">No significa sin riesgo</strong> — la prevención
             sigue aplicando.
@@ -97,31 +138,48 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
         )}
       </section>
 
-      {/* AHORA — estado ENFEN, yuxtapuesto (sin fórmula combinada) */}
-      <section className="rounded-xl border border-border bg-secondary/50 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <Eyebrow>Ahora</Eyebrow>
-          <Badge variant="destructive" className="shrink-0">
-            {enfenData.estado}
-          </Badge>
+      {/* AHORA — banda de alerta ENFEN (yuxtapuesta, sin fórmula) */}
+      <section className="overflow-hidden rounded-2xl text-white" style={{ background: '#C2410C' }}>
+        <div className="p-4">
+          <div className="flex items-center gap-3">
+            <span aria-hidden className="text-2xl leading-none">
+              ⚠️
+            </span>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
+                Ahora
+              </p>
+              <p className="font-display text-lg font-semibold leading-tight">
+                {enfenData.estado}
+              </p>
+            </div>
+          </div>
+          <p className="mt-2.5 text-sm leading-relaxed text-white/95">{enfenData.resumen}</p>
+          <p className="mt-2 text-[11px] text-white/70">
+            Fuente: {enfenData.fecha} · resumido por IA
+          </p>
         </div>
-        <p className="mt-2 text-sm leading-relaxed">{enfenData.resumen}</p>
-        <p className="mt-2 font-mono text-[11px] text-muted-foreground">{enfenData.fecha}</p>
       </section>
 
-      {/* QUÉ HACER — checklist curado INDECI */}
+      {/* QUÉ HACER — checklist ciudadano (emoji + detalle, táctil) */}
       <section>
-        <Eyebrow>Qué hacer</Eyebrow>
-        <ul className="mt-2 space-y-2.5 text-sm">
+        <Eyebrow>Qué hacer hoy</Eyebrow>
+        <p className="mb-3 mt-1 text-sm text-muted-foreground">
+          Pasos simples recomendados por INDECI para tu nivel de riesgo.
+        </p>
+        <ul className="space-y-2.5">
           {checklist.map((item, i) => (
-            <li key={i} className="flex gap-2.5">
-              <span
-                aria-hidden
-                className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-ink text-[10px] font-bold text-canvas"
-              >
-                ✓
+            <li
+              key={i}
+              className="flex items-start gap-3 rounded-xl border border-border bg-card p-3"
+            >
+              <span aria-hidden className="text-2xl leading-none">
+                {item.emoji}
               </span>
-              <span className="leading-snug">{item}</span>
+              <div className="min-h-[1.5rem]">
+                <p className="text-sm font-semibold leading-snug">{item.titulo}</p>
+                <p className="mt-0.5 text-xs leading-snug text-muted-foreground">{item.detalle}</p>
+              </div>
             </li>
           ))}
         </ul>
@@ -131,6 +189,14 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
           </p>
         )}
       </section>
+
+      {/* ACCIÓN FINAL — agencia, no miedo */}
+      <button
+        onClick={share}
+        className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-canvas transition-opacity hover:opacity-90"
+      >
+        {shared ? '¡Copiado para compartir!' : '📲 Compartir con mi familia'}
+      </button>
     </div>
   )
 }
