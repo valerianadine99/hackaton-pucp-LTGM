@@ -10,6 +10,7 @@
 | `raw/` | Descargas oficiales **crudas** (el `.xlsx` de INDECI, el comunicado ENFEN). Re-descargables desde los links de abajo. |
 | `geo/` | GeoJSON distrital: la fuente y el recorte a **costa norte**. |
 | `processed/` | **Insumos limpios para el ETL** (conteos por distrito, GeoJSON recortado, texto ENFEN, checklists). El ETL los lee y los carga a la BD — **no** los sirve la app como archivos. |
+| `scripts/` | Scripts reproducibles (`build_districts.py`, `filter_geojson.py`) + `requirements.txt`. |
 
 > La geometría se guarda como GeoJSON en un `JSONField` de PostgreSQL (sin PostGIS). El resumen de ENFEN **no** es un archivo precomputado: el backend hace una **llamada real a Claude** y **cachea** la respuesta en la BD (ver §IA abajo).
 
@@ -59,23 +60,25 @@ https://raw.githubusercontent.com/juaneladio/peru-geojson/master/peru_distrital_
 
 ---
 
-## Filtro de fenómeno (strings reales, verificados en el visor SINPAD2)
+## Columnas del Excel y filtro (CONFIRMADO con el archivo real)
 
-> Resuelve el **riesgo #2 de CONTEXT.md**. Los valores reales del campo "Peligro principal" **no** son los que asumía el brief. **Filtrar por "contiene", no por igualdad exacta.**
+El header real está en la **fila 3** (`header=2` en pandas; arriba hay una fila vacía + un título). Columnas clave:
 
-Valores observados:
-- `LLUVIAS INTENSAS`
-- `INUNDACIÓN POR DESBORDE DE RIO`
-- `INUNDACIÓN POR DESBORDE DE CANALES`
-- `HUAYCO` / `MOVIMIENTO EN MASA`
+| Concepto | Columna en el Excel |
+|---|---|
+| ubigeo | `COD. DISTRITO` (6 dígitos con ceros, ej. `200101`) — compatible con `IDDIST` del GeoJSON |
+| fenómeno | `EMERGENCIA` |
+| año | `AÑO` (2003–2020) |
+| departamento | `DPTO.` |
+| distrito | `DIST.` |
 
-Regla de filtro (case-insensitive, sin tildes): conservar filas cuyo fenómeno **contenga**
+**Valores reales de `EMERGENCIA` para lluvia/Niño** (resuelve el **riesgo #2** — los del visor/brief eran distintos):
+- `LLUVIA INTENSA` (25.262 a nivel nacional)
+- `INUNDACIÓN` (5.786)
+- `HUAYCO` (2.276)
 
-```
-INUNDAC  |  LLUVIA  |  HUAYCO  |  MOVIMIENTO EN MASA
-```
-
-> ⚠️ El nombre de la columna y la granularidad en el **Excel 2003-2020** pueden diferir del visor — verificar al abrir el archivo y ajustar el filtro a lo que aparezca.
+Filtro (case-insensitive, sin tildes): conservar filas cuyo `EMERGENCIA` **contenga** `LLUVIA | INUNDAC | HUAYCO`.
+*(Se excluyen a propósito `DESLIZAMIENTO`, `EROSIÓN`, etc.; ampliar el criterio si se quiere.)*
 
 ## Cobertura: costa norte
 
@@ -111,14 +114,36 @@ raw/enfen_comunicado.txt  (texto crudo del comunicado)
 - `processed/checklists.json` → checklist INDECI por nivel (curado, no IA) (modelo `ChecklistItem`)
 - `raw/enfen_comunicado.txt` → texto crudo que el ETL manda a Claude (resumen cacheado en `EnfenSummary`)
 
+## Estado del procesamiento (HECHO ✅)
+
+Ejecutado sobre el Excel real con los scripts de `scripts/`:
+
+- **3.532** emergencias de lluvia en costa norte (2003-2020) → **207 distritos** con registro.
+- `processed/districts.json` (207) · `processed/sinpad_costa_norte.csv` (3.532 filas)
+- `processed/northcoast.geojson` (198 polígonos) → **197 coloreados + 1 gris**.
+- Niveles por **terciles** del conteo: `bajo < 8 ≤ medio < 16 ≤ alto`. Top: Tumbes (157), Tambo Grande (100), Buldibuyo (74).
+- `processed/checklists.json`: checklist INDECI curado por nivel (alto/medio/bajo/sin_registro).
+
+**Desajustes de ubigeo (10 distritos de la data sin polígono):**
+- `200115 Veintiséis de Octubre` (Piura, 11 emergencias) — distrito **post-2013** ausente del GeoJSON 2007 (**riesgo #3**). Opción: fusionar al distrito padre (Piura `200101`) o declararlo en una nota del mapa.
+- 9 más con códigos ubigeo **legacy/erróneos** en SINPAD (ej. *Castilla, Piura* como `1902xx` en vez de `2001xx`), conteos ≤ 8 → bajo impacto en la demo.
+
+### Regenerar
+```bash
+cd data/scripts && pip install -r requirements.txt
+python build_districts.py     # -> processed/districts.json + sinpad_costa_norte.csv
+# descargar la fuente nacional una vez (ver geo/.gitkeep), luego:
+python filter_geojson.py       # -> processed/northcoast.geojson
+```
+
 ## Checklist para Luis (rol Datos)
 
-- [ ] Descargar el `.xlsx` 2003-2020 → `raw/`
-- [ ] Abrir y anotar: ¿hay columna `ubigeo`? nombre exacto de la columna de fenómeno y de distrito
-- [ ] Filtrar fenómeno + costa norte → agrupar por distrito → conteo + años
-- [ ] Descargar el GeoJSON distrital → recortar a 4 deptos → `processed/northcoast.geojson`
-- [ ] Reconciliar ubigeos (o match por nombre normalizado si no hay ubigeo)
-- [ ] Exportar `processed/districts.json` → entregar al ETL para cargar a la BD
+- [x] Descargar el `.xlsx` 2003-2020 → `raw/`
+- [x] Confirmar columnas: `COD. DISTRITO` (ubigeo) · `EMERGENCIA` (fenómeno) · `AÑO` · `DPTO.` · `DIST.`
+- [x] Filtrar fenómeno + costa norte → agrupar por distrito → conteo + años (`build_districts.py`)
+- [x] Descargar el GeoJSON distrital → recortar a 4 deptos → `processed/northcoast.geojson` (`filter_geojson.py`)
+- [ ] **Pendiente:** reconciliar los 10 ubigeos sin polígono (Veintiséis de Octubre + códigos legacy)
+- [x] Exportar `processed/districts.json` → listo para que el ETL lo cargue a la BD
 
 ## Plan-B (si el Excel/match se rompe — timebox 90 min)
 
