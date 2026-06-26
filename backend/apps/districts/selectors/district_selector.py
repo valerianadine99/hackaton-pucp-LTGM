@@ -14,9 +14,9 @@ class DistrictSelectors:
         return District.objects.get(pk=ubigeo_code)
 
     @staticmethod
-    def get_checklist(level: str) -> list[str]:
+    def get_checklist(level: str) -> list[dict]:
         return list(
             ChecklistItem.objects.filter(level=level)
             .order_by("order")
-            .values_list("text", flat=True)
+            .values("emoji", "title", "detail")
         )

@@ -4,27 +4,27 @@
   "disclaimer": "Información de referencia; no reemplaza a las indicaciones de las autoridades oficiales (INDECI / ENFEN / municipalidad).",
   "niveles": {
     "alto": [
-      "Prepara una mochila de emergencia: agua, alimentos no perecibles, linterna, radio a pilas, botiquín y copias de tus documentos en bolsa hermética.",
-      "Identifica y practica la ruta de evacuación hacia la zona segura más alta de tu distrito.",
-      "Acuerda con tu familia un punto de reunión y un contacto fuera de la zona de riesgo.",
-      "Si vives cerca de un río o quebrada, aléjate del cauce ante lluvias intensas: los huaicos llegan sin aviso.",
-      "Ten a la mano los números de emergencia: INDECI 115, Bomberos 116, y los de tu municipalidad."
+      { "emoji": "🎒", "titulo": "Arma tu mochila de emergencia", "detalle": "Agua, alimentos no perecibles, linterna, radio a pilas, botiquín y copias de tus documentos en bolsa hermética." },
+      { "emoji": "🚪", "titulo": "Practica tu ruta de evacuación", "detalle": "Identifica y ensaya el camino hacia la zona segura más alta de tu distrito." },
+      { "emoji": "👨‍👩‍👧", "titulo": "Acuerda un punto de reunión familiar", "detalle": "Define un lugar de encuentro y un contacto fuera de la zona de riesgo." },
+      { "emoji": "🌊", "titulo": "Aléjate de ríos y quebradas", "detalle": "Ante lluvias intensas, mantente lejos del cauce: los huaicos llegan sin aviso." },
+      { "emoji": "📞", "titulo": "Ten los números de emergencia a mano", "detalle": "INDECI 115, Bomberos 116 y los de tu municipalidad." }
     ],
     "medio": [
-      "Arma tu mochila de emergencia y revisa que el agua y los alimentos no estén vencidos.",
-      "Limpia techos, canaletas y desagües para que el agua de lluvia escurra sin acumularse.",
-      "Ubica la zona segura y el albergue más cercano a tu vivienda.",
-      "Guarda tus documentos importantes en una bolsa impermeable."
+      { "emoji": "🎒", "titulo": "Arma tu mochila de emergencia", "detalle": "Revisa que el agua y los alimentos no estén vencidos." },
+      { "emoji": "🧹", "titulo": "Limpia techos, canaletas y desagües", "detalle": "Para que el agua de lluvia escurra sin acumularse." },
+      { "emoji": "📍", "titulo": "Ubica tu zona segura", "detalle": "Identifica el albergue más cercano a tu vivienda." },
+      { "emoji": "📄", "titulo": "Protege tus documentos", "detalle": "Guárdalos en una bolsa impermeable." }
     ],
     "bajo": [
-      "Mantén en casa un kit básico de emergencia (agua, linterna, botiquín).",
-      "Infórmate de los avisos de SENAMHI y los comunicados del ENFEN.",
-      "Revisa que el techo y las paredes de tu vivienda estén en buen estado."
+      { "emoji": "🎒", "titulo": "Mantén un kit básico en casa", "detalle": "Agua, linterna y botiquín." },
+      { "emoji": "📻", "titulo": "Mantente informado", "detalle": "Sigue los avisos de SENAMHI y los comunicados del ENFEN." },
+      { "emoji": "🏠", "titulo": "Revisa tu vivienda", "detalle": "Verifica que el techo y las paredes estén en buen estado." }
     ],
     "sin_registro": [
-      "Sin emergencias registradas no significa sin riesgo: mantén un kit básico de emergencia en casa.",
-      "Infórmate de los avisos de SENAMHI y los comunicados del ENFEN para tu zona.",
-      "Identifica la zona segura más cercana por si la situación cambia."
+      { "emoji": "⚠️", "titulo": "Sin registro no es sin riesgo", "detalle": "Mantén un kit básico de emergencia en casa por precaución." },
+      { "emoji": "📻", "titulo": "Mantente informado", "detalle": "Sigue los avisos de SENAMHI y los comunicados del ENFEN para tu zona." },
+      { "emoji": "📍", "titulo": "Ubica tu zona segura", "detalle": "Identifícala por si la situación cambia." }
     ]
   }
 }

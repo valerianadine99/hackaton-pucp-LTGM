@@ -16,13 +16,17 @@ def test_enfen_returns_latest(client):
     EnfenSummary.objects.create(
         alert_level="alert",
         summary="Resumen de prueba.",
+        bulletin_number="N°11-2026",
+        source_url="https://enfen.imarpe.gob.pe/comunicados/",
         date=datetime.date(2026, 6, 26),
     )
     response = client.get("/api/enfen")
     assert response.status_code == 200
     body = response.json()
-    assert body["alert_level"] == "alert"
+    # `state` se expone en español (display del choice)
+    assert body["state"] == "Alerta de El Niño Costero"
     assert body["summary"] == "Resumen de prueba."
+    assert body["bulletin_number"] == "N°11-2026"
     assert body["date"] == "2026-06-26"
 
 
