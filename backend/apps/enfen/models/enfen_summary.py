@@ -16,6 +16,9 @@ class EnfenSummary(models.Model):
     raw_text = models.TextField(default="")
     summary = models.TextField()
     date = models.DateField(db_index=True)
+    bulletin_number = models.CharField(max_length=20, default="")
+    source_url = models.URLField(default="")
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

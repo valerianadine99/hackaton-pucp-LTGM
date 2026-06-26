@@ -11,9 +11,12 @@ class EnfenApi(APIView):
     permission_classes = []
 
     class OutputSerializer(serializers.Serializer):
-        alert_level = serializers.CharField()
+        # `state` se devuelve en español (lo lee el ciudadano) vía el display del choice.
+        state = serializers.CharField(source="get_alert_level_display")
         summary = serializers.CharField()
+        bulletin_number = serializers.CharField()
         date = serializers.DateField()
+        source_url = serializers.CharField()
 
     def get(self, request):
         latest = EnfenSelectors.get_latest()

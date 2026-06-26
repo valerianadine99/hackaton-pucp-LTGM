@@ -51,11 +51,17 @@ def main() -> None:
             "anios": sorted(int(a) for a in g["AÑO"].unique()),
         })
 
-    counts = pd.Series([r["conteo"] for r in rows])
-    q33, q66 = counts.quantile(0.33), counts.quantile(0.66)
+    # Nivel por UMBRALES de conteo (FR-013: regla por umbrales, NO cuantiles).
+    # Cortes afinados a la distribución real (mediana 13, máx 159): 0=sin_registro,
+    # 1-7 bajo, 8-24 medio, 25+ alto → reparto ~61/103/43 (mapa variado, "alto" reservado
+    # a distritos golpeados de forma recurrente). Afinables manteniendo la regla por umbrales.
+    UMBRAL_MEDIO = 8
+    UMBRAL_ALTO = 25
 
     def nivel(c):
-        return "alto" if c >= q66 else "medio" if c >= q33 else "bajo"
+        if c == 0:
+            return "sin_registro"
+        return "alto" if c >= UMBRAL_ALTO else "medio" if c >= UMBRAL_MEDIO else "bajo"
 
     for r in rows:
         r["nivel"] = nivel(r["conteo"])
@@ -64,11 +70,14 @@ def main() -> None:
     OUT_JSON.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
 
     cols = ["CÓDIGO DE EMERGENCIA-SINPAD", "AÑO", "MES", "COD. DISTRITO", "DPTO.", "PROV.", "DIST.",
-            "EMERGENCIA", "FALLECIDOS", "DAMNIFICADOS", "AFECTADOS", "VIVIENDAS DESTRUIDAS"]
+            "EMERGENCIA", "FALLECIDOS", "DAMNIFICADOS", "AFECTADOS", "VIVIENDAS DESTRUIDAS",
+            "VIVIENDAS AFECTADAS"]
     f[cols].to_csv(OUT_CSV, index=False, encoding="utf-8")
 
+    from collections import Counter
+    dist_niveles = Counter(r["nivel"] for r in rows)
     print(f"Filas tras filtro: {len(f):,} | distritos: {len(rows)} | "
-          f"umbrales: bajo<{q33:.0f}<=medio<{q66:.0f}<=alto")
+          f"umbrales: 1-7 bajo, 8-24 medio, 25+ alto -> {dict(dist_niveles)}")
     print(f"Escrito: {OUT_JSON}")
     print(f"Escrito: {OUT_CSV}")
 

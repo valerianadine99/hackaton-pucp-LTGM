@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Emergency(models.Model):
-    sinpad_id = models.IntegerField(unique=True, null=True, blank=True, db_index=True)
+    # No es único: en la BD consolidada de INDECI un mismo código aparece en varias filas.
+    sinpad_id = models.IntegerField(null=True, blank=True, db_index=True)
     date = models.DateField(null=True, blank=True, db_index=True)
     year = models.PositiveSmallIntegerField(db_index=True)
     district = models.ForeignKey(
