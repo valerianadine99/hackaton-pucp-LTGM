@@ -80,6 +80,7 @@ cd frontend && npm test
 - 🎯 [`CONTEXT.md`](CONTEXT.md) — alcance cerrado y decisiones bloqueadas (entrada para Spec Kit).
 - 📄 [`docs/vigia-brief.md`](docs/vigia-brief.md) — brief extendido: contexto, fuentes de datos, justificación.
 - ✅ [`docs/hito-1.md`](docs/hito-1.md) — checklist de cumplimiento del Hito 1.
+- 🗂️ [`data/`](data/) — fuentes de datos confirmadas (SINPAD, GeoJSON, ENFEN), pipeline y strings de filtro.
 - 📋 [`docs/tournament_rules.md`](docs/tournament_rules.md) · 🧰 [`docs/stack_and_resources.md`](docs/stack_and_resources.md) · 🏛️ [`docs/adr/`](docs/adr/)
 
 ## Estructura del proyecto
@@ -88,6 +89,7 @@ cd frontend && npm test
 .
 ├── backend/          # Django + DRF (sirve JSON precocido; PyTest)
 ├── frontend/         # Next.js + Leaflet + shadcn/ui (Jest)
+├── data/             # fuentes confirmadas + pipeline (raw/ geo/ processed/)
 ├── docs/
 │   ├── architecture.md     # ← diagramas de arquitectura (Hito 1)
 │   ├── hito-1.md           # checklist del Hito 1
