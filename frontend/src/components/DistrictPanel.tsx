@@ -189,8 +189,7 @@ export function DistrictPanel({
               {STATE_TITLE[idx]}
             </p>
             <p className="mt-2 text-[13.5px] leading-relaxed text-[#384450]">
-              {enfenData.resumen ||
-                'Resumen por IA pendiente: se genera al procesar el comunicado oficial con la API key de Claude.'}
+              {enfenData.resumen || 'Resumen pendiente de actualización.'}
             </p>
             <div className="mt-4 flex gap-1.5">
               {SEGMENTS.map((s, i) => (
