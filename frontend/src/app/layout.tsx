@@ -1,28 +1,22 @@
 import type { Metadata } from 'next'
-import { Fraunces, Archivo, IBM_Plex_Mono } from 'next/font/google'
+import { Libre_Franklin } from 'next/font/google'
 import './globals.css'
 
-const display = Fraunces({
+const franklin = Libre_Franklin({
   subsets: ['latin'],
-  variable: '--font-display',
-  display: 'swap',
-})
-const sans = Archivo({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
-const mono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-sans',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: 'Vigía — costa norte',
-  description: 'Alerta temprana y memoria del Fenómeno El Niño: tu distrito, tu historial, tu plan.',
+  description: 'Memoria y alerta del Fenómeno El Niño: tu distrito, tu historial, tu plan.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html lang="es" className={franklin.variable}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   )

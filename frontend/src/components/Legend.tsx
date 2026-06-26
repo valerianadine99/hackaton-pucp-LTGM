@@ -4,18 +4,18 @@ const ORDER: Nivel[] = ['alto', 'medio', 'bajo', 'sin_registro']
 
 export function Legend() {
   return (
-    <div className="rounded-xl border border-border bg-card/90 p-3 shadow-sm backdrop-blur">
-      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        Emergencias por lluvia · 2003–2020
+    <div className="rounded-xl border border-border bg-white/95 p-3 shadow-md backdrop-blur">
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.06em] text-[#16202a]">
+        Emergencias registradas · 2003–2020
       </p>
-      <ul className="mt-2 space-y-1">
+      <ul className="mt-2 space-y-1.5">
         {ORDER.map((n) => (
-          <li key={n} className="flex items-center gap-2 text-xs">
+          <li key={n} className="flex items-center gap-2 text-xs font-medium text-[#384450]">
             <span
-              className="inline-block h-3 w-3 rounded-[3px]"
+              className="inline-block h-3 w-3 rounded-full"
               style={{ backgroundColor: LEVEL_COLOR[n] }}
             />
-            <span className="text-foreground/80">{LEVEL_LABEL[n]}</span>
+            {LEVEL_LABEL[n]}
           </li>
         ))}
       </ul>

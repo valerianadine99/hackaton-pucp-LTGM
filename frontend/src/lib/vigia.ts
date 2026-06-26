@@ -27,10 +27,10 @@ export interface Checklists {
 // Escala de "memoria" del Niño: a más golpes, más intenso. Nunca verde (decisión #10).
 // Gris explícito para distritos sin registro ("no significa sin riesgo").
 export const LEVEL_COLOR: Record<Nivel, string> = {
-  alto: '#A01C1C', // oxblood — la memoria más golpeada
-  medio: '#EA7B27', // ember
-  bajo: '#F4C152', // amber cálido
-  sin_registro: '#BBB3A6', // arena (warm stone), nunca verde
+  alto: '#d23b3b', // rojo — la memoria más golpeada
+  medio: '#e07c2a', // naranja
+  bajo: '#e3b23c', // dorado
+  sin_registro: '#9aa3ab', // gris honesto, nunca verde
 }
 
 export const LEVEL_LABEL: Record<Nivel, string> = {
