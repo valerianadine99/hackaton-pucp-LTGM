@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { Legend } from '@/components/Legend'
 import { DistrictPanel, enfenSegLabel } from '@/components/DistrictPanel'
 import type { Checklists, District, EnfenSummary } from '@/lib/vigia'
+import { loadDistricts } from '@/lib/vigia-api'
 
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -121,9 +122,12 @@ export default function Home() {
   const [locating, setLocating] = useState(false)
 
   useEffect(() => {
-    fetch('/data/districts.json')
-      .then((r) => r.json())
-      .then((rows: District[]) => setDistricts(Object.fromEntries(rows.map((d) => [d.ubigeo, d]))))
+    // Distritos desde la API en vivo (BD vía backend). Checklists y ENFEN siguen en
+    // estático por ahora (no hay endpoint de checklists y el resumen ENFEN requiere la
+    // API key de Claude); se conectan en la siguiente fase.
+    loadDistricts()
+      .then(setDistricts)
+      .catch((e) => console.error('No se pudo cargar distritos de la API:', e))
     fetch('/data/checklists.json').then((r) => r.json()).then(setChecklists)
     fetch('/data/enfen.json').then((r) => r.json()).then(setEnfen)
   }, [])
