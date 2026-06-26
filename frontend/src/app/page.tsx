@@ -3,8 +3,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Legend } from '@/components/Legend'
-import { DistrictPanel, enfenSegLabel } from '@/components/DistrictPanel'
-import type { Checklists, District, EnfenSummary } from '@/lib/vigia'
+import { DistrictPanel } from '@/components/DistrictPanel'
+import { LEVEL_COLOR, type Checklists, type District, type EnfenSummary, type Nivel } from '@/lib/vigia'
+
+// Chip junto al nombre del distrito = MEMORIA histórica del distrito (varía y refleja el
+// color del mapa). NO es la alerta ENFEN (esa es regional → va en la banda, igual para todos).
+const NIVEL_CHIP: Record<Nivel, string> = {
+  alto: 'Riesgo histórico alto',
+  medio: 'Riesgo histórico medio',
+  bajo: 'Riesgo histórico bajo',
+  sin_registro: 'Sin registro',
+}
 import { loadChecklists, loadDistricts, loadEnfen, loadGeojson } from '@/lib/vigia-api'
 
 const MapView = dynamic(() => import('@/components/MapView'), {
@@ -76,10 +85,12 @@ function BrandHeader({ children }: { children?: React.ReactNode }) {
 function StepBar({
   title,
   badge,
+  badgeColor,
   onBack,
 }: {
   title: string
   badge?: string
+  badgeColor?: string
   onBack: () => void
 }) {
   return (
@@ -103,8 +114,14 @@ function StepBar({
         <span className="text-base font-extrabold">{title}</span>
       </div>
       {badge && (
-        <span className="flex items-center gap-1.5 rounded-full border border-white/12 bg-[#d23b3b]/20 px-3 py-1 text-[11.5px] font-extrabold text-[#ffd2d2]">
-          <span className="h-[7px] w-[7px] rounded-full bg-[#ff6b6b]" />
+        <span
+          className="flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[11.5px] font-extrabold text-white"
+          style={{ background: `${badgeColor ?? '#9aa3ab'}33` }}
+        >
+          <span
+            className="h-[7px] w-[7px] rounded-full"
+            style={{ background: badgeColor ?? '#9aa3ab' }}
+          />
           {badge}
         </span>
       )}
@@ -148,7 +165,10 @@ export default function Home() {
     [districts]
   )
   const selectedDistrict = selected ? districts[selected.ubigeo] ?? null : null
-  const segLabel = enfenSegLabel(enfen?.estado)
+  // Chip = nivel histórico del distrito (varía por distrito). 'sin_registro' si no tiene data.
+  const selectedNivel: Nivel = selectedDistrict?.nivel ?? 'sin_registro'
+  const chipLabel = NIVEL_CHIP[selectedNivel]
+  const chipColor = LEVEL_COLOR[selectedNivel]
   const hasData = options.length > 0
 
   function pick(s: Sel) {
@@ -289,7 +309,12 @@ export default function Home() {
 
         {step === 3 && selected && (
           <>
-            <StepBar title={selected.nombre} badge={segLabel} onBack={() => setStep(2)} />
+            <StepBar
+              title={selected.nombre}
+              badge={chipLabel}
+              badgeColor={chipColor}
+              onBack={() => setStep(2)}
+            />
             <div className="flex-1 overflow-y-auto">
               <DistrictPanel
                 view="action"
