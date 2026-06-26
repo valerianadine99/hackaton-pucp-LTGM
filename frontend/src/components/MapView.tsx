@@ -60,6 +60,12 @@ export default function MapView({ districts, selected, onSelect }: Props) {
       }).addTo(map)
 
       map.fitBounds(layer.getBounds(), { padding: [12, 12] })
+      // Leaflet en flexbox a veces inicia con altura 0; reajustar tras el layout.
+      setTimeout(() => {
+        if (cancelled || !mapRef.current) return
+        map.invalidateSize()
+        map.fitBounds(layer.getBounds(), { padding: [12, 12] })
+      }, 250)
       // Reajustar al cambiar tamaño (rotación / breakpoint móvil↔desktop).
       const onResize = () => {
         map.invalidateSize()
