@@ -1,0 +1,29 @@
+{
+  "fuente": "INDECI — Recomendaciones ante lluvias intensas, huaicos e inundaciones",
+  "fuente_url": "https://www.gob.pe/indeci",
+  "disclaimer": "Información de referencia; no reemplaza a las indicaciones de las autoridades oficiales (INDECI / ENFEN / tu municipalidad).",
+  "niveles": {
+    "alto": [
+      { "emoji": "🎒", "titulo": "Arma tu mochila de emergencia", "detalle": "Agua, alimentos, linterna, radio a pilas, botiquín y copia de tus documentos en bolsa hermética." },
+      { "emoji": "🚪", "titulo": "Conoce tu ruta de evacuación", "detalle": "Identifica la zona segura más alta cerca de tu casa y practícala con tu familia." },
+      { "emoji": "🌊", "titulo": "Aléjate de ríos y quebradas", "detalle": "Ante lluvias intensas, los huaicos llegan sin aviso." },
+      { "emoji": "📞", "titulo": "Guarda los números clave", "detalle": "INDECI 115 · Bomberos 116 · tu COE local." }
+    ],
+    "medio": [
+      { "emoji": "🎒", "titulo": "Prepara tu mochila de emergencia", "detalle": "Revisa que el agua y los alimentos no estén vencidos." },
+      { "emoji": "🧹", "titulo": "Limpia techos, canaletas y desagües", "detalle": "Para que el agua de lluvia escurra sin acumularse." },
+      { "emoji": "🗺️", "titulo": "Ubica tu zona segura", "detalle": "Conoce el albergue más cercano a tu vivienda." },
+      { "emoji": "📄", "titulo": "Protege tus documentos", "detalle": "Guárdalos en una bolsa impermeable." }
+    ],
+    "bajo": [
+      { "emoji": "🎒", "titulo": "Ten un kit básico en casa", "detalle": "Agua, linterna y botiquín a la mano." },
+      { "emoji": "📲", "titulo": "Sigue los avisos oficiales", "detalle": "SENAMHI y los comunicados del ENFEN." },
+      { "emoji": "🏠", "titulo": "Revisa tu vivienda", "detalle": "Que el techo y las paredes estén en buen estado." }
+    ],
+    "sin_registro": [
+      { "emoji": "⚠️", "titulo": "Sin registro no es sin riesgo", "detalle": "Mantén un kit básico de emergencia en casa." },
+      { "emoji": "📲", "titulo": "Mantente informado", "detalle": "Sigue los avisos de SENAMHI y el ENFEN para tu zona." },
+      { "emoji": "🗺️", "titulo": "Ubica tu zona segura", "detalle": "Por si la situación cambia." }
+    ]
+  }
+}
