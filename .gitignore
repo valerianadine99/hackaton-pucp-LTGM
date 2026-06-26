@@ -37,3 +37,6 @@ coverage/
 
 # Claude Code — ajustes locales/personales (no compartir)
 .claude/settings.local.json
+
+# TypeScript build cache
+*.tsbuildinfo
