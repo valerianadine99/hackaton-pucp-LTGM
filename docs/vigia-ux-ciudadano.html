@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vigía — La app para el ciudadano</title>
+<style>
+  :root{
+    --bg:#0e1116; --txt:#e8eef4; --mut:#94a3b2; --line:#2a323d; --accent:#4cc2ff;
+    --ink:#13202b; --paper:#f7f9fb; --paper2:#eef3f7;
+    --calm:#2563c9; --warn:#e8862a; --alert:#d9482b; --safe:#2c9e5a; --grey:#9aa7b2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1180px;margin:0 auto;padding:24px 16px 80px}
+  header{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:10px}
+  h1{font-size:1.5rem;margin:0 0 4px}
+  .sub{color:var(--mut);font-size:.93rem;max-width:720px}
+  .stamp{display:inline-block;margin-top:10px;font-size:.74rem;color:#7ee787;
+    background:rgba(126,231,135,.08);border:1px solid rgba(126,231,135,.25);padding:3px 10px;border-radius:20px;font-family:ui-monospace,Menlo,monospace}
+  .shift{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px}
+  .shift>div{border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.86rem}
+  .shift .no{background:rgba(217,72,43,.06);border-color:rgba(217,72,43,.3)}
+  .shift .yes{background:rgba(44,158,90,.07);border-color:rgba(44,158,90,.35)}
+  .shift h4{margin:0 0 6px;font-size:.78rem;letter-spacing:.5px;text-transform:uppercase}
+  .shift .no h4{color:var(--alert)} .shift .yes h4{color:var(--safe)}
+  .shift ul{margin:0;padding-left:18px;color:var(--mut)} .shift li{margin:3px 0}
+  .phones{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+  .stage{display:flex;flex-direction:column;align-items:center;gap:10px;width:300px}
+  .stage .cap{font-size:.78rem;color:var(--mut);font-family:ui-monospace,Menlo,monospace}
+  .stage .cap b{color:var(--accent)}
+  /* phone */
+  .phone{width:300px;height:620px;background:#000;border-radius:42px;padding:11px;
+    box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 2px #2a323d;position:relative;flex:none}
+  .phone:before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);
+    width:120px;height:26px;background:#000;border-radius:0 0 16px 16px;z-index:5}
+  .screen{width:100%;height:100%;background:var(--paper);border-radius:32px;overflow:hidden;
+    color:var(--ink);display:flex;flex-direction:column;position:relative}
+  .scl{overflow-y:auto;height:100%}
+  .scl::-webkit-scrollbar{display:none}
+  /* top bar */
+  .tb{padding:34px 18px 12px;font-size:.78rem;color:var(--mut);display:flex;justify-content:space-between;align-items:center}
+  .tb .loc{font-weight:700;color:var(--ink);font-size:.92rem}
+  .pad{padding:0 18px 22px}
+  /* hero district */
+  .hero{padding:8px 18px 18px}
+  .hero .lbl{font-size:.82rem;color:#5b6b78}
+  .hero .dist{font-size:2rem;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+  .hero .reg{font-size:.82rem;color:#5b6b78;margin-top:2px}
+  /* memory sentence */
+  .mem{background:var(--paper2);border-radius:16px;padding:16px;margin:6px 18px 0}
+  .mem .big{font-size:1.06rem;font-weight:700;line-height:1.35}
+  .mem .big .hl{color:var(--alert)}
+  .mem .years{display:flex;gap:7px;margin-top:14px;align-items:flex-end;justify-content:space-between}
+  .mem .yr{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+  .mem .dot{width:18px;height:18px;border-radius:50%;background:var(--warn)}
+  .mem .dot.peak{width:26px;height:26px;background:var(--alert);box-shadow:0 0 0 4px rgba(217,72,43,.18)}
+  .mem .dot.lo{width:12px;height:12px;background:#f0b88a}
+  .mem .yl{font-size:.6rem;color:#7a8893;font-family:ui-monospace,Menlo,monospace}
+  .mem .cae{font-size:.74rem;color:#5b6b78;margin-top:10px;text-align:center}
+  /* status band */
+  .band{margin:16px 18px 0;border-radius:16px;padding:16px;color:#fff;background:var(--alert)}
+  .band.calm{background:var(--calm)} .band.safe{background:var(--safe)}
+  .band .row{display:flex;align-items:center;gap:12px}
+  .band .ico{font-size:1.8rem;line-height:1}
+  .band .t{font-size:1.05rem;font-weight:800}
+  .band .s{font-size:.8rem;opacity:.92;margin-top:6px;line-height:1.4}
+  .band .src{font-size:.64rem;opacity:.7;margin-top:8px}
+  /* action */
+  .act{margin:18px 18px 0}
+  .act h3{font-size:1.05rem;margin:0 0 4px}
+  .act .lead{font-size:.8rem;color:#5b6b78;margin:0 0 10px}
+  .todo{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #e2e9ef;border-radius:14px;padding:13px;margin-bottom:9px}
+  .todo .ck{width:26px;height:26px;border-radius:8px;border:2px solid var(--safe);flex:none;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--safe)}
+  .todo .x{font-size:.86rem;font-weight:600;line-height:1.3}
+  .todo .x small{display:block;font-weight:400;color:#5b6b78;font-size:.74rem;margin-top:2px}
+  .todo .em{font-size:1.5rem;flex:none}
+  .cta{display:block;width:calc(100% - 36px);margin:16px 18px;background:var(--ink);color:#fff;
+    text-align:center;padding:15px;border-radius:14px;font-weight:700;font-size:.95rem;border:none}
+  .ftr{font-size:.62rem;color:#8b98a3;text-align:center;padding:4px 22px 26px}
+  /* start screen */
+  .start{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px 24px;
+    background:linear-gradient(160deg,#13202b,#1c3346)}
+  .start .logo{font-size:2.1rem;font-weight:800;color:#fff;letter-spacing:-1px}
+  .start .tag{color:#aebfcc;font-size:.86rem;margin:8px 0 30px;line-height:1.45}
+  .start .geo{width:100%;background:var(--accent);color:#06243a;border:none;padding:15px;border-radius:14px;font-weight:800;font-size:.95rem;display:flex;align-items:center;justify-content:center;gap:8px}
+  .start .or{color:#7e93a3;font-size:.76rem;margin:16px 0}
+  .start .pick{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#dce7ef;padding:13px;border-radius:12px;text-align:left;font-size:.86rem;display:flex;justify-content:space-between}
+  .notes{margin-top:30px;border-top:1px solid var(--line);padding-top:16px}
+  .notes h2{font-size:1.05rem;margin:0 0 10px}
+  .notes .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .notes .n{background:#171c24;border:1px solid var(--line);border-radius:11px;padding:13px;font-size:.82rem;color:var(--mut)}
+  .notes .n b{color:var(--txt)}
+  footer{margin-top:26px;border-top:1px solid var(--line);padding-top:14px;color:var(--mut);font-size:.78rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Vigía para el ciudadano — no un dashboard, una conversación</h1>
+  <div class="sub">La misma data real (SINPAD + ENFEN), pero contada como se la dirías a tu vecino:
+  una cosa a la vez, en lenguaje simple, terminando siempre en <b>qué hacer hoy</b>. Pensado para
+  la persona que vive en Tumbes, Catacaos o Castilla — no para quien lee tablas.</div>
+  <span class="stamp">Ejemplo real: distrito de Tumbes · 42 emergencias en 7 años · ENFEN en Alerta</span>
+</header>
+
+<div class="shift">
+  <div class="no">
+    <h4>✗ Lo que NO queremos (dashboard)</h4>
+    <ul>
+      <li>“1.083.042 afectados acumulados” — número abstracto, no me toca.</li>
+      <li>Dona de fenómenos, ejes, leyendas — lenguaje de analista.</li>
+      <li>Muchos datos a la vez → parálisis, no acción.</li>
+      <li>Tono de reporte → miedo o indiferencia.</li>
+    </ul>
+  </div>
+  <div class="yes">
+    <h4>✓ Lo que SÍ (conversación ciudadana)</h4>
+    <ul>
+      <li>“Tu distrito se inundó 7 años seguidos” — personal y concreto.</li>
+      <li>Íconos y frases, no gráficos. Un mensaje por pantalla.</li>
+      <li>Texto grande, botones grandes (táctil ≥44px).</li>
+      <li>Termina en 3 acciones claras: <b>memoria → alerta → qué hago</b>.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="phones">
+
+  <!-- STAGE 1: ENTRADA -->
+  <div class="stage">
+    <div class="phone"><div class="screen">
+      <div class="start">
+        <div class="logo">Vigía</div>
+        <div class="tag">¿Qué tan preparada está tu zona ante las lluvias?</div>
+        <button class="geo">📍 Usar mi ubicación</button>
+        <div class="or">— o elige tu distrito —</div>
+        <div class="pick">Tumbes, Tumbes <span>›</span></div>
+      </div>
+    </div></div>
+    <div class="cap"><b>1.</b> Entrada — un solo gesto</div>
+  </div>
+
+  <!-- STAGE 2: TU DISTRITO -->
+  <div class="stage">
+    <div class="phone"><div class="screen"><div class="scl">
+      <div class="tb"><span class="loc">📍 Tumbes</span><span>cambiar</span></div>
+      <div class="hero">
+        <div class="lbl">Tu distrito</div>
+        <div class="dist">Tumbes</div>
+        <div class="reg">Tumbes · costa norte</div>
+      </div>
+
+      <div class="mem">
+        <div class="big">Tu distrito ha tenido emergencias por lluvia <span class="hl">los 7 últimos años seguidos</span>.</div>
+        <div class="years">
+          <div class="yr"><div class="dot peak"></div><div class="yl">2017</div></div>
+          <div class="yr"><div class="dot lo"></div><div class="yl">2018</div></div>
+          <div class="yr"><div class="dot"></div><div class="yl">2019</div></div>
+          <div class="yr"><div class="dot lo"></div><div class="yl">2020</div></div>
+          <div class="yr"><div class="dot"></div><div class="yl">2021</div></div>
+          <div class="yr"><div class="dot"></div><div class="yl">2022</div></div>
+          <div class="yr"><div class="dot lo"></div><div class="yl">2023</div></div>
+        </div>
+        <div class="cae">El <b>2017</b>, el del Niño Costero, fue el más fuerte. Casi siempre por <b>lluvias intensas</b>.</div>
+      </div>
+
+      <div class="band">
+        <div class="row"><div class="ico">⚠️</div><div>
+          <div class="t">Hoy hay Alerta</div>
+        </div></div>
+        <div class="s">Las autoridades (ENFEN) declararon <b>Alerta de El Niño Costero</b>: se esperan lluvias por encima de lo normal en tu zona durante el verano. Es momento de prepararse.</div>
+        <div class="src">Fuente: Comunicado ENFEN N°11-2026 · resumido por IA</div>
+      </div>
+
+      <a class="cta">Ver qué hacer hoy ↓</a>
+      <div class="ftr">Información de referencia. No reemplaza a las autoridades oficiales (INDECI / ENFEN).</div>
+    </div></div></div>
+    <div class="cap"><b>2.</b> Tu distrito — <b>memoria + alerta</b></div>
+  </div>
+
+  <!-- STAGE 3: QUÉ HACER -->
+  <div class="stage">
+    <div class="phone"><div class="screen"><div class="scl">
+      <div class="tb"><span class="loc">📋 Tu plan</span><span>Tumbes</span></div>
+      <div class="act">
+        <h3>Qué puedes hacer hoy</h3>
+        <p class="lead">Pasos simples, recomendados por INDECI para tu nivel de riesgo.</p>
+
+        <div class="todo"><div class="em">🎒</div><div class="x">Arma tu mochila de emergencia
+          <small>Agua, linterna, radio, copia de tus documentos.</small></div></div>
+        <div class="todo"><div class="em">🚪</div><div class="x">Conoce tu ruta de evacuación
+          <small>Identifica la zona segura más cercana a tu casa.</small></div></div>
+        <div class="todo"><div class="em">🧹</div><div class="x">Limpia canaletas y desagües
+          <small>Evita que el agua se acumule cerca de tu vivienda.</small></div></div>
+        <div class="todo"><div class="em">📞</div><div class="x">Guarda los números clave
+          <small>INDECI 115 · tu COE local · familiares.</small></div></div>
+      </div>
+      <a class="cta">Compartir con mi familia</a>
+      <div class="ftr">Información de referencia. No reemplaza a las autoridades oficiales (INDECI / ENFEN).</div>
+    </div></div></div>
+    <div class="cap"><b>3.</b> Tu plan — <b>acción concreta</b></div>
+  </div>
+
+</div>
+
+<div class="notes">
+  <h2>Las decisiones de diseño que la hacen “para todos”</h2>
+  <div class="grid">
+    <div class="n"><b>Memoria, no estadística.</b> En vez de “42 emergencias”, decimos “7 años seguidos” y mostramos puntos por año — el 2017 grande y rojo. El dato sigue siendo real; el envoltorio es humano.</div>
+    <div class="n"><b>Una emoción por pantalla.</b> Pantalla 2 = “esto te ha pasado y hay alerta”. Pantalla 3 = “y esto haces”. Nunca todo junto.</div>
+    <div class="n"><b>Color con cuidado.</b> Naranja/rojo solo en la alerta y el peor año. Sin verde tranquilizador falso; los distritos sin registro van en gris honesto.</div>
+    <div class="n"><b>La IA al servicio, no de protagonista.</b> Traduce el comunicado ENFEN a una frase que cualquiera entiende (“se esperan lluvias por encima de lo normal”).</div>
+    <div class="n"><b>Termina en acción, no en miedo.</b> El último paso siempre es un checklist concreto y un “compartir con mi familia”. Agencia, no amenaza.</div>
+    <div class="n"><b>Para el celular y el pulgar.</b> Texto grande, botones de ≥44px, scroll vertical natural. Funciona con una mano y datos lentos.</div>
+  </div>
+</div>
+
+<footer>
+  Mismos datos verificados que el dashboard (<code>docs/vigia-ux-opciones.html</code>), reempaquetados para el ciudadano.
+  Ejemplo: distrito de Tumbes (ubigeo 240101), 7 años de registros SINPAD + estado ENFEN actual.
+  El dashboard sirve para el jurado/analista; esta vista es la que usa la persona en la zona de riesgo.
+</footer>
+
+</div>
+</body>
+</html>
