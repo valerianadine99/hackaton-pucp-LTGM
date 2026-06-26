@@ -18,7 +18,7 @@ Convierte la memoria pública del Niño en costa norte en un momento personal �
 ## Restricciones duras
 
 - **~6 horas de build**, equipo de 3 ingenieros (hackathon Torneo de Vibecoding 2026, GDG × DSCPUCP).
-- **Nada en vivo en la demo:** datos precargados, sin dependencia de red en el clímax.
+- **Integración real, datos precocidos:** demo interactiva con integración end-to-end (frontend → Django DRF → datos). Lo precocido es el *dato* (JSON servido por el backend), no la arquitectura. Sin llamadas a fuentes **externas** en vivo (SINPAD/ENFEN) ni al modelo de IA durante la demo.
 - **Una sola pantalla.** El MVP cuenta la historia completa con dos datos: memoria (mapa) + acción (panel).
 - Jurado peruano que vivió el Niño Costero 2017 — el framing emocional pesa tanto como lo técnico.
 
@@ -81,7 +81,7 @@ Clic en *tu* distrito → mapa de memoria real. **La IA es el cierre, no el hér
 | **GeoJSON distrital** (IGN/INEI) | Geometría | Polígonos de distrito por ubigeo | Distrito |
 
 - **Artefacto precocido:** el output de Datos es un **JSON estático** `{ ubigeo, nombre, conteo, nivel }`
-  para costa norte + GeoJSON filtrado con ubigeos reconciliados. El front consume eso; nada en vivo.
+  para costa norte + GeoJSON filtrado con ubigeos reconciliados. El front consume eso **vía el backend DRF**; sin fuentes externas en vivo.
 - **Filtro de fenómeno:** solo lluvia → `Inundación`, `Lluvias intensas`, `Huayco / Movimiento en masa`.
   Verificar los strings exactos al bajar el CSV.
 - **Susceptibilidad ≠ registro.** Mostramos registro (se inundó), no predicción (es propenso).
@@ -91,7 +91,7 @@ Clic en *tu* distrito → mapa de memoria real. **La IA es el cierre, no el hér
 - **Frontend:** Next.js 14 (App Router) + React 18 + TypeScript + **Leaflet** (a agregar). En `frontend/`.
 - **Backend:** **Django + Django REST Framework** sirviendo JSON estático precocido. En `backend/`.
 - **Datos:** JSON estático precocido (no Postgres/PostGIS en 6h). El backend expone los endpoints; el GeoJSON distrital puede vivir en el front como asset.
-- **IA:** para la demo, el resumen del ENFEN es **texto precomputado/estático** (coherente con "nada en vivo"). Llamada real al modelo = roadmap.
+- **IA:** para la demo, el resumen del ENFEN es **texto precomputado/estático** (coherente con "sin fuentes externas en vivo"); igual se **sirve por el endpoint DRF**, no hardcodeado en el front. Llamada real al modelo = roadmap.
 
 Monolito pragmático: `frontend` (Next.js) ↔ `backend` (Django DRF). Sin microservicios.
 
