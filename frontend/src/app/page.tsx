@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { Legend } from '@/components/Legend'
 import { DistrictPanel } from '@/components/DistrictPanel'
 import type { Checklists, District, EnfenSummary } from '@/lib/vigia'
-import { loadDistricts } from '@/lib/vigia-api'
+import { loadChecklists, loadDistricts, loadEnfen } from '@/lib/vigia-api'
 
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -108,14 +108,16 @@ export default function Home() {
   const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
-    // Distritos desde la API en vivo (BD vía backend). Checklists y ENFEN siguen en
-    // estático por ahora (no hay endpoint de checklists y el resumen ENFEN requiere la
-    // API key de Claude); se conectan en la siguiente fase.
+    // Todo desde la API en vivo (BD vía backend) — sin archivos estáticos (Principio VIII).
     loadDistricts()
       .then(setDistricts)
-      .catch((e) => console.error('No se pudo cargar distritos de la API:', e))
-    fetch('/data/checklists.json').then((r) => r.json()).then(setChecklists)
-    fetch('/data/enfen.json').then((r) => r.json()).then(setEnfen)
+      .catch((e) => console.error('No se pudo cargar distritos:', e))
+    loadChecklists()
+      .then(setChecklists)
+      .catch((e) => console.error('No se pudo cargar checklists:', e))
+    loadEnfen()
+      .then(setEnfen)
+      .catch((e) => console.error('No se pudo cargar ENFEN:', e))
   }, [])
 
   useEffect(() => {

@@ -65,6 +65,14 @@ export interface EnfenStatus {
   source_url: string
 }
 
+/** `GET /api/checklists` — checklist curado por nivel (texto en español). */
+export interface ChecklistsResponse {
+  source: string
+  source_url: string
+  disclaimer: string
+  levels: Record<RiskLevel, ChecklistItem[]>
+}
+
 /** Propiedades de cada feature de `GET /api/districts/geojson`. */
 export interface DistrictFeatureProps {
   ubigeo_code: string
@@ -121,6 +129,11 @@ export function fetchDistricts(): Promise<DistrictSummary[]> {
 /** FeatureCollection con la geometría para el choropleth (Leaflet). */
 export function fetchDistrictsGeojson(): Promise<DistrictFeatureCollection> {
   return apiGet<DistrictFeatureCollection>('/api/districts/geojson')
+}
+
+/** Checklist curado de INDECI agrupado por nivel. */
+export function fetchChecklists(): Promise<ChecklistsResponse> {
+  return apiGet<ChecklistsResponse>('/api/checklists')
 }
 
 /** Detalle de un distrito (memoria + checklist). */

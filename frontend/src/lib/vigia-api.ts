@@ -4,8 +4,14 @@
  * sin tocar los componentes ni los archivos estáticos.
  */
 import type { GeoJsonObject } from 'geojson'
-import { fetchDistricts, fetchDistrictsGeojson, type RiskLevel } from './api'
-import type { District, Nivel } from './vigia'
+import {
+  fetchChecklists,
+  fetchDistricts,
+  fetchDistrictsGeojson,
+  fetchEnfen,
+  type RiskLevel,
+} from './api'
+import type { Checklists, ChecklistItem, District, EnfenSummary, Nivel } from './vigia'
 
 const LEVEL_ES: Record<RiskLevel, Nivel> = {
   high: 'alto',
@@ -49,4 +55,33 @@ export async function loadGeojson(): Promise<GeoJsonObject> {
       },
     })),
   } as unknown as GeoJsonObject
+}
+
+/** Checklist curado por nivel, desde `/api/checklists`. */
+export async function loadChecklists(): Promise<Checklists> {
+  const c = await fetchChecklists()
+  const niveles: Record<string, ChecklistItem[]> = {}
+  for (const [level, items] of Object.entries(c.levels)) {
+    niveles[LEVEL_ES[level as RiskLevel]] = items.map((it) => ({
+      emoji: it.emoji,
+      titulo: it.title,
+      detalle: it.detail,
+    }))
+  }
+  return { fuente: c.source, fuente_url: c.source_url, disclaimer: c.disclaimer, niveles }
+}
+
+/**
+ * Estado ENFEN desde `/api/enfen`. `resumen` puede venir vacío si aún no se generó
+ * con la API key de Claude — el panel lo maneja con honestidad (no inventa texto).
+ */
+export async function loadEnfen(): Promise<EnfenSummary | null> {
+  const e = await fetchEnfen()
+  if (!e) return null
+  return {
+    estado: e.state,
+    resumen: e.summary,
+    fecha: e.bulletin_number ? `Comunicado ${e.bulletin_number} · ${e.date}` : e.date,
+    fuente_url: e.source_url,
+  }
 }

@@ -20,3 +20,15 @@ class DistrictSelectors:
             .order_by("order")
             .values("emoji", "title", "detail")
         )
+
+    @staticmethod
+    def get_checklists_by_level() -> dict[str, list[dict]]:
+        """Todos los ítems del checklist agrupados por código de nivel."""
+        grouped: dict[str, list[dict]] = {}
+        for item in ChecklistItem.objects.order_by("level", "order").values(
+            "level", "emoji", "title", "detail"
+        ):
+            grouped.setdefault(item["level"], []).append(
+                {"emoji": item["emoji"], "title": item["title"], "detail": item["detail"]}
+            )
+        return grouped

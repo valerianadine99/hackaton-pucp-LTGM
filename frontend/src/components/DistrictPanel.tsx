@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { MemoryRibbon } from '@/components/MemoryRibbon'
 import {
-  ENFEN_SUMMARY,
   LEVEL_LABEL,
   type Checklists,
   type District,
@@ -66,7 +65,7 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
   const nivel = district ? district.nivel : 'sin_registro'
   const checklist = checklists?.niveles[nivel] ?? []
   const titulo = district?.nombre ?? nombre ?? 'Distrito'
-  const enfenData = enfen ?? ENFEN_SUMMARY
+  const enfenData = enfen
   const streak = district ? longestStreak(district.anios) : 0
   const tuvo2017 = district?.anios.includes(2017)
 
@@ -139,27 +138,44 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: P
       </section>
 
       {/* AHORA — banda de alerta ENFEN (yuxtapuesta, sin fórmula) */}
-      <section className="overflow-hidden rounded-2xl text-white" style={{ background: '#C2410C' }}>
-        <div className="p-4">
-          <div className="flex items-center gap-3">
-            <span aria-hidden className="text-2xl leading-none">
-              ⚠️
-            </span>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
-                Ahora
-              </p>
-              <p className="font-display text-lg font-semibold leading-tight">
-                {enfenData.estado}
-              </p>
+      {enfenData && (
+        <section
+          className="overflow-hidden rounded-2xl text-white"
+          style={{ background: '#C2410C' }}
+        >
+          <div className="p-4">
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="text-2xl leading-none">
+                ⚠️
+              </span>
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
+                  Ahora
+                </p>
+                <p className="font-display text-lg font-semibold leading-tight">
+                  {enfenData.estado}
+                </p>
+              </div>
             </div>
+            {enfenData.resumen ? (
+              <>
+                <p className="mt-2.5 text-sm leading-relaxed text-white/95">{enfenData.resumen}</p>
+                <p className="mt-2 text-[11px] text-white/70">
+                  Fuente: {enfenData.fecha} · resumido por IA
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="mt-2.5 text-sm leading-relaxed text-white/90">
+                  Resumen por IA pendiente. El estado proviene del comunicado oficial; el resumen en
+                  lenguaje claro se genera al procesar el comunicado con IA.
+                </p>
+                <p className="mt-2 text-[11px] text-white/70">Fuente: {enfenData.fecha}</p>
+              </>
+            )}
           </div>
-          <p className="mt-2.5 text-sm leading-relaxed text-white/95">{enfenData.resumen}</p>
-          <p className="mt-2 text-[11px] text-white/70">
-            Fuente: {enfenData.fecha} · resumido por IA
-          </p>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* QUÉ HACER — checklist ciudadano (emoji + detalle, táctil) */}
       <section>
