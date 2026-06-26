@@ -233,7 +233,7 @@ export default function Home() {
                   {locating ? 'Ubicándote…' : 'Usar mi ubicación'}
                 </button>
               </div>
-              <div className="relative mx-4 mt-1 flex-1 overflow-hidden rounded-t-[18px] border border-b-0 border-[#d8e0e4]">
+              <div className="relative mx-4 mt-1 min-h-[340px] flex-1 overflow-hidden rounded-t-[18px] border border-b-0 border-[#d8e0e4] bg-[#dfe6ea]">
                 {!isDesktop && (
                   <MapView
                     districts={districts}
