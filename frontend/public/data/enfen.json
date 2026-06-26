@@ -1,0 +1,7 @@
+{
+  "estado": "Alerta de El Niño Costero",
+  "fecha": "Comunicado Oficial ENFEN N° 11-2026 · 15 de junio de 2026",
+  "resumen": "El ENFEN mantiene la Alerta de El Niño Costero. El evento, iniciado en marzo de 2026, se prolongaría hasta el verano de 2027, con mayor probabilidad de magnitud fuerte entre junio y septiembre. De cara a la próxima temporada de lluvias (setiembre 2026 a abril 2027), se recomienda adoptar medidas de preparación y reducción del riesgo.",
+  "fuente_url": "https://enfen.imarpe.gob.pe/comunicados/",
+  "nota": "Resumen de muestra basado en el texto oficial; en producción lo genera la IA (Claude) a partir del comunicado."
+}

@@ -4,6 +4,7 @@ import {
   LEVEL_LABEL,
   type Checklists,
   type District,
+  type EnfenSummary,
 } from '@/lib/vigia'
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   nombre: string | null
   district: District | null // null + ubigeo => distrito sin registro
   checklists: Checklists | null
+  enfen: EnfenSummary | null
 }
 
 function nivelBadgeVariant(nivel: string) {
@@ -19,14 +21,14 @@ function nivelBadgeVariant(nivel: string) {
   return 'outline' as const
 }
 
-export function DistrictPanel({ ubigeo, nombre, district, checklists }: Props) {
+export function DistrictPanel({ ubigeo, nombre, district, checklists, enfen }: Props) {
   if (!ubigeo) {
     return (
-      <div className="flex h-full flex-col items-center justify-center p-8 text-center text-muted-foreground">
+      <div className="flex min-h-[40vh] flex-col items-center justify-center p-8 text-center text-muted-foreground md:h-full md:min-h-0">
         <p className="text-lg font-medium text-foreground">Empieza por tu distrito</p>
         <p className="mt-2 max-w-xs text-sm">
-          Haz clic en tu distrito en el mapa (o búscalo en la lista) para ver qué le ha pasado
-          antes, qué viene y qué hacer hoy.
+          Toca tu distrito en el mapa (o búscalo en la lista) para ver qué le ha pasado antes,
+          qué viene y qué hacer hoy.
         </p>
       </div>
     )
@@ -35,24 +37,23 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists }: Props) {
   const nivel = district ? district.nivel : 'sin_registro'
   const checklist = checklists?.niveles[nivel] ?? []
   const titulo = district?.nombre ?? nombre ?? 'Distrito'
+  const enfenData = enfen ?? ENFEN_SUMMARY
 
   return (
-    <div className="flex h-full flex-col gap-4 overflow-y-auto p-5">
+    <div className="flex min-h-[40vh] flex-col gap-4 overflow-y-auto p-5 md:h-full md:min-h-0">
       <header>
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-xl font-semibold">{titulo}</h2>
-          <Badge variant={nivelBadgeVariant(nivel)}>{LEVEL_LABEL[nivel]}</Badge>
+        <div className="flex items-start justify-between gap-2">
+          <h2 className="text-xl font-semibold leading-tight">{titulo}</h2>
+          <Badge variant={nivelBadgeVariant(nivel)} className="shrink-0">
+            {LEVEL_LABEL[nivel]}
+          </Badge>
         </div>
-        {district && (
-          <p className="text-sm text-muted-foreground">{district.departamento}</p>
-        )}
+        {district && <p className="text-sm text-muted-foreground">{district.departamento}</p>}
       </header>
 
       {/* MEMORIA */}
       <section className="rounded-lg border bg-card p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Memoria
-        </p>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Memoria</p>
         {district ? (
           <>
             <p className="mt-1 text-2xl font-bold">
@@ -68,8 +69,8 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists }: Props) {
           </>
         ) : (
           <p className="mt-1 text-sm">
-            Sin emergencias registradas en SINPAD.{' '}
-            <strong>No significa sin riesgo</strong> — la prevención sigue aplicando.
+            Sin emergencias registradas en SINPAD. <strong>No significa sin riesgo</strong> — la
+            prevención sigue aplicando.
           </p>
         )}
       </section>
@@ -80,12 +81,14 @@ export function DistrictPanel({ ubigeo, nombre, district, checklists }: Props) {
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             Estado actual
           </p>
-          <Badge variant="destructive">{ENFEN_SUMMARY.estado}</Badge>
+          <Badge variant="destructive" className="shrink-0">
+            {enfenData.estado}
+          </Badge>
         </div>
-        <p className="mt-2 text-sm">{ENFEN_SUMMARY.resumen}</p>
+        <p className="mt-2 text-sm">{enfenData.resumen}</p>
         <p className="mt-1 text-xs text-muted-foreground">
-          ENFEN · {ENFEN_SUMMARY.fecha} ·{' '}
-          <span className="italic">resumen de muestra (lo generará la IA)</span>
+          {enfenData.fecha}
+          {enfenData.nota ? ` · ${enfenData.nota}` : ''}
         </p>
       </section>
 

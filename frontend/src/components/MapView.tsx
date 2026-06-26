@@ -18,6 +18,7 @@ export default function MapView({ districts, selected, onSelect }: Props) {
   const mapRef = useRef<any>(null)
   const layersRef = useRef<Record<string, any>>({})
   const selectedRef = useRef<string | null>(selected)
+  const resizeCleanupRef = useRef<(() => void) | null>(null)
 
   function styleFor(ubigeo: string, isSelected: boolean) {
     const d = districts[ubigeo]
@@ -59,10 +60,18 @@ export default function MapView({ districts, selected, onSelect }: Props) {
       }).addTo(map)
 
       map.fitBounds(layer.getBounds(), { padding: [12, 12] })
+      // Reajustar al cambiar tamaño (rotación / breakpoint móvil↔desktop).
+      const onResize = () => {
+        map.invalidateSize()
+        map.fitBounds(layer.getBounds(), { padding: [12, 12] })
+      }
+      window.addEventListener('resize', onResize)
+      resizeCleanupRef.current = () => window.removeEventListener('resize', onResize)
     })()
 
     return () => {
       cancelled = true
+      resizeCleanupRef.current?.()
       if (mapRef.current) {
         mapRef.current.remove()
         mapRef.current = null
