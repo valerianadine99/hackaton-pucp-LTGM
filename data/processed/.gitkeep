@@ -1,0 +1,6 @@
+# INSUMOS LIMPIOS para el ETL (no los sirve la app; el ETL los carga a PostgreSQL/RDS).
+#   districts.json       -> [{ ubigeo, nombre, conteo, nivel, anios[] }]   (modelo District)
+#   northcoast.geojson   -> geometría por ubigeo                            (District.geom JSONField)
+#   checklists.json      -> checklist INDECI por nivel (curado, no IA)      (modelo ChecklistItem)
+# El resumen ENFEN NO es archivo: el ETL llama a Claude y cachea en la BD (EnfenSummary).
+# Esquemas / modelos ORM: ../../docs/architecture.md §4

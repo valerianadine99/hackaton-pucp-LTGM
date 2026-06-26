@@ -1,0 +1,4 @@
+# GeoJSON distrital va aquí.
+# Fuente: peru_distrital_simple.geojson (juaneladio/peru-geojson) — IDDIST=ubigeo, NOMBDIST=nombre.
+#   https://raw.githubusercontent.com/juaneladio/peru-geojson/master/peru_distrital_simple.geojson
+# Output: northcoast.geojson (recorte a Tumbes/Piura/Lambayeque/La Libertad).
