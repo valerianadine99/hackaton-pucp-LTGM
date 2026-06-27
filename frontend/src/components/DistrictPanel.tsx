@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { type Checklists, type District, type EnfenSummary } from '@/lib/vigia'
+import type { Memory } from '@/lib/api'
+
+// Punto por año, tamaño + color según intensidad (severidad de daños del año).
+const DOT: Record<string, { size: number; color: string }> = {
+  peak: { size: 22, color: '#d23b3b' },
+  high: { size: 17, color: '#e07c2a' },
+  medium: { size: 13, color: '#e3b23c' },
+  low: { size: 10, color: '#efd39a' },
+}
 
 interface Props {
   ubigeo: string | null
@@ -9,6 +18,7 @@ interface Props {
   district: District | null // null + ubigeo => distrito sin registro
   checklists: Checklists | null
   enfen: EnfenSummary | null
+  memory?: Memory | null // memoria del distrito (año pico, fenómeno dominante, dots por año)
   // 'all' = desktop (todo); 'history' = paso 2 (qué pasó + qué viene); 'action' = paso 3 (qué hacer + compartir)
   view?: 'all' | 'history' | 'action'
 }
@@ -59,6 +69,7 @@ export function DistrictPanel({
   district,
   checklists,
   enfen,
+  memory,
   view = 'all',
 }: Props) {
   const [done, setDone] = useState<Record<number, boolean>>({})
@@ -104,6 +115,10 @@ export function DistrictPanel({
   const titulo = district?.nombre ?? nombre ?? 'Distrito'
   const nivel = district ? district.nivel : 'sin_registro'
   const checklist = checklists?.niveles[nivel] ?? []
+  // Widget 4 — frecuencia histórica: años con evento / span del periodo (registro, no predicción).
+  const anios = district?.anios ?? []
+  const span = anios.length ? Math.max(...anios) - Math.min(...anios) + 1 : 0
+  const freqPct = span ? Math.round((anios.length / span) * 100) : 0
   const doneCount = checklist.reduce((acc, _, i) => acc + (done[i] ? 1 : 0), 0)
   const pct = checklist.length ? Math.round((doneCount / checklist.length) * 100) : 0
 
@@ -156,18 +171,98 @@ export function DistrictPanel({
                   </span>
                 </div>
                 <div className="mt-4">
-                  <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#8a949d]">
-                    Años con eventos
+                  <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.05em] text-[#8a949d]">
+                    Años con emergencias · tamaño = intensidad
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {district.anios.map((y) => (
-                      <span
-                        key={y}
-                        className="rounded-lg border border-[#dde6ea] bg-[#eef3f5] px-2.5 py-1 text-[13px] font-bold text-ink"
-                      >
-                        {y}
-                      </span>
-                    ))}
+                  {memory?.by_year?.length ? (
+                    <>
+                      <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
+                        {memory.by_year.map((b) => {
+                          const s = DOT[b.intensity] ?? DOT.low
+                          return (
+                            <div
+                              key={b.year}
+                              className="flex flex-col items-center gap-1.5"
+                              title={`${b.year} · intensidad ${b.intensity}`}
+                            >
+                              <span
+                                className="rounded-full"
+                                style={{ width: s.size, height: s.size, background: s.color }}
+                              />
+                              <span className="text-[9.5px] font-bold text-[#8a949d]">
+                                {`'${String(b.year).slice(2)}`}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <p className="mt-3 text-[12.5px] leading-snug text-[#5d6873]">
+                        {memory.dominant_phenomenon && (
+                          <>
+                            Casi siempre por{' '}
+                            <b className="text-[#16202a]">
+                              {memory.dominant_phenomenon.toLowerCase()}
+                            </b>
+                            .{' '}
+                          </>
+                        )}
+                        {memory.peak_year && (
+                          <>
+                            El <b className="text-[#16202a]">{memory.peak_year}</b> fue el golpe más
+                            fuerte.{' '}
+                          </>
+                        )}
+                        {memory.streak_years >= 3 && (
+                          <>Hasta {memory.streak_years} años seguidos con emergencias.</>
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    /* Fallback sin detalle (memoria aún cargando): chips planos de años */
+                    <div className="flex flex-wrap gap-1.5">
+                      {district.anios.map((y) => (
+                        <span
+                          key={y}
+                          className="rounded-lg border border-[#dde6ea] bg-[#eef3f5] px-2.5 py-1 text-[13px] font-bold text-ink"
+                        >
+                          {y}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Widgets: frecuencia histórica (④) + año pico (③) */}
+                <div className="mt-4 grid grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-[#e6edf0] bg-[#f5f8fa] p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.05em] text-[#8a949d]">
+                      Frecuencia histórica
+                    </p>
+                    <p className="mt-1.5 text-[26px] font-black leading-none text-floodHigh">
+                      {freqPct}%
+                    </p>
+                    <p className="mt-1 text-[11px] font-semibold leading-snug text-[#5d6873]">
+                      de los años ({anios.length} de {span}) con emergencia
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-[#e6edf0] bg-[#f5f8fa] p-3">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.05em] text-[#8a949d]">
+                      Año de mayor impacto
+                    </p>
+                    {memory?.peak_year ? (
+                      <>
+                        <p className="mt-1.5 text-[26px] font-black leading-none text-ink">
+                          {memory.peak_year}
+                        </p>
+                        <p className="mt-1 text-[11px] font-semibold leading-snug text-[#5d6873]">
+                          por daños registrados
+                        </p>
+                      </>
+                    ) : (
+                      <p className="mt-1.5 text-[13px] font-semibold leading-snug text-[#8a949d]">
+                        Cargando…
+                      </p>
+                    )}
                   </div>
                 </div>
               </>

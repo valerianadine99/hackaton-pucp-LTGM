@@ -6,9 +6,11 @@
 import type { GeoJsonObject } from 'geojson'
 import {
   fetchChecklists,
+  fetchDistrict,
   fetchDistricts,
   fetchDistrictsGeojson,
   fetchEnfen,
+  type Memory,
   type RiskLevel,
 } from './api'
 import type { Checklists, ChecklistItem, District, EnfenSummary, Nivel } from './vigia'
@@ -83,5 +85,18 @@ export async function loadEnfen(): Promise<EnfenSummary | null> {
     resumen: e.summary,
     fecha: e.bulletin_number ? `Comunicado ${e.bulletin_number} · ${e.date}` : e.date,
     fuente_url: e.source_url,
+  }
+}
+
+/**
+ * Memoria derivada del distrito (año pico, fenómeno dominante, racha, por año), desde
+ * `/api/districts/<ubigeo>`. Devuelve null si falla (la UI degrada con gracia).
+ */
+export async function loadDistrictMemory(ubigeoCode: string): Promise<Memory | null> {
+  try {
+    const detail = await fetchDistrict(ubigeoCode)
+    return detail.memory
+  } catch {
+    return null
   }
 }

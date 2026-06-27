@@ -14,7 +14,14 @@ const NIVEL_CHIP: Record<Nivel, string> = {
   bajo: 'Riesgo histórico bajo',
   sin_registro: 'Sin registro',
 }
-import { loadChecklists, loadDistricts, loadEnfen, loadGeojson } from '@/lib/vigia-api'
+import {
+  loadChecklists,
+  loadDistricts,
+  loadDistrictMemory,
+  loadEnfen,
+  loadGeojson,
+} from '@/lib/vigia-api'
+import type { Memory } from '@/lib/api'
 
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -134,9 +141,20 @@ export default function Home() {
   const [checklists, setChecklists] = useState<Checklists | null>(null)
   const [enfen, setEnfen] = useState<EnfenSummary | null>(null)
   const [selected, setSelected] = useState<Sel>(null)
+  const [memory, setMemory] = useState<Memory | null>(null) // detalle del distrito seleccionado
   const [step, setStep] = useState<1 | 2 | 3>(1) // paso móvil
   const [isDesktop, setIsDesktop] = useState(false)
   const [locating, setLocating] = useState(false)
+
+  // Al seleccionar un distrito, trae su memoria (año pico, fenómeno dominante…) de la API.
+  useEffect(() => {
+    if (!selected?.ubigeo) {
+      setMemory(null)
+      return
+    }
+    setMemory(null)
+    loadDistrictMemory(selected.ubigeo).then(setMemory).catch(() => setMemory(null))
+  }, [selected?.ubigeo])
 
   useEffect(() => {
     // Todo desde la API en vivo (BD vía backend) — sin fallback estático (Principio VIII).
@@ -289,6 +307,7 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto">
               <DistrictPanel
                 view="history"
+                memory={memory}
                 ubigeo={selected.ubigeo}
                 nombre={selected.nombre}
                 district={selectedDistrict}
@@ -371,6 +390,7 @@ export default function Home() {
           <aside className="w-[26rem] shrink-0 overflow-y-auto border-l border-border bg-paper">
             <DistrictPanel
               view="all"
+              memory={memory}
               ubigeo={selected?.ubigeo ?? null}
               nombre={selected?.nombre ?? null}
               district={selectedDistrict}
